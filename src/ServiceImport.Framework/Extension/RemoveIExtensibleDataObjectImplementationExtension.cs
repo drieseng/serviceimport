@@ -105,10 +105,7 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
 
                 var type = member as CodeTypeDeclaration;
                 if (type != null)
-                {
                     RemoveIExtensibleDataObjectImplementation(type);
-                    continue;
-                }
             }
         }
 

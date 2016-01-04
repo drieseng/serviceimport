@@ -25,11 +25,11 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
     /// types as abstract when the contract is generated.
     /// </para>
     /// </summary>
-    /// <seealso cref="https://msdn.microsoft.com/en-us/library/ms733112.aspx"/>
+    /// <seealso cref="!:https://msdn.microsoft.com/en-us/library/ms733112.aspx"/>
     public class AbstractTypeExtension : IServiceContractGenerationExtension, IWsdlImportExtension, IContractBehavior
     {
         private XsdDataContractImporter _xsdDataContractImporter;
-        private ServiceModel _serviceModel;
+        private readonly ServiceModel _serviceModel;
 
         public AbstractTypeExtension(ServiceModel serviceModel)
         {

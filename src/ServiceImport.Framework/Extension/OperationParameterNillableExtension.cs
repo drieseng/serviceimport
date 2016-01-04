@@ -26,7 +26,7 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
     /// </remarks>
     public class OperationParameterNillableExtension : IWsdlImportExtension
     {
-        private ServiceModel _serviceModel;
+        private readonly ServiceModel _serviceModel;
 
         public OperationParameterNillableExtension(ServiceModel serviceModel)
         {

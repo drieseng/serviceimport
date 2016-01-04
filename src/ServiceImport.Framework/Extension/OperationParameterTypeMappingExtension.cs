@@ -18,7 +18,7 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
     public class OperationParameterTypeMappingExtension : IOperationContractGenerationExtension, IOperationBehavior, IWsdlImportExtension
     {
         private ServiceDescriptionCollection _wsdlDocuments;
-        private IDictionary<XmlTypeCode, CodeTypeReference> _xmlTypeMapping;
+        private readonly IDictionary<XmlTypeCode, CodeTypeReference> _xmlTypeMapping;
 //        private IDictionary<XmlQualifiedName, OperationMessageInfo> _operationMessageRegister;
 
         public OperationParameterTypeMappingExtension(IDictionary<XmlTypeCode, CodeTypeReference> xmlTypeMapping) //, IDictionary<XmlQualifiedName, OperationMessageInfo> operationMessageRegister)
@@ -76,7 +76,6 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
 
         public void GenerateOperation(OperationContractGenerationContext context)
         {
-            var inputParametersToFix = new Dictionary<string, string>();
             var portType = FindPortType(_wsdlDocuments, context.Contract.Contract.Name, context.Contract.Contract.Namespace);
 
             var operation = FindOperationByName(portType.Operations, context.Operation.Name);

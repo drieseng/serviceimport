@@ -23,7 +23,7 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
     /// </remarks>
     public class ComplexTypeOptionalElementsNillableExtension : IWsdlImportExtension, IServiceContractGenerationExtension, IContractBehavior
     {
-        private ServiceModel _serviceModel;
+        private readonly ServiceModel _serviceModel;
         private XsdDataContractImporter _xsdDataContractImporter;
 
         public ComplexTypeOptionalElementsNillableExtension(ServiceModel serviceModel)

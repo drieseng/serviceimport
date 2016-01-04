@@ -18,8 +18,8 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
     public class ComplexTypeElementTypeMappingExtension : IServiceContractGenerationExtension, IWsdlImportExtension, IContractBehavior
     {
         private XsdDataContractImporter _xsdDataContractImporter;
-        private IDictionary<XmlTypeCode, CodeTypeReference> _xmlTypeMapping;
-        private ServiceModel _serviceModel;
+        private readonly IDictionary<XmlTypeCode, CodeTypeReference> _xmlTypeMapping;
+        private readonly ServiceModel _serviceModel;
 
         public ComplexTypeElementTypeMappingExtension(ServiceModel serviceModel, IDictionary<XmlTypeCode, CodeTypeReference> xmlTypeMapping)
         {
