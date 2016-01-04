@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{FA02E3EF-49F8-4418-B660-A3C0A730F0C7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BRail.Nis.ServiceImport.Framework</RootNamespace>
+    <AssemblyName>BRail.Nis.ServiceImport.Framework</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Helper\EnumerableExtensions.cs" />
+    <Compile Include="Extension\AbstractTypeExtension.cs" />
+    <Compile Include="CodeDom\CodeDomExtensions.cs" />
+    <Compile Include="CodeDom\CodeTypeName.cs" />
+    <Compile Include="Extension\ComplexTypeElementTypeMappingExtension.cs" />
+    <Compile Include="Extension\ComplexTypeOptionalElementsNillableExtension.cs" />
+    <Compile Include="Extension\OperationContractReplyActionRemovalExtension.cs" />
+    <Compile Include="Writer\FileSystemCodeWriter.cs" />
+    <Compile Include="Writer\ICodeWriter.cs" />
+    <Compile Include="Factory\IWsdlImporterFactory.cs" />
+    <Compile Include="Factory\IXsdDataContractImporterFactory.cs" />
+    <Compile Include="Helper\MetadataDiscovery.cs" />
+    <Compile Include="Model\ComplexType.cs" />
+    <Compile Include="Model\Element.cs" />
+    <Compile Include="Model\OperationMessageInfo.cs" />
+    <Compile Include="Model\OperationParameterInfo.cs" />
+    <Compile Include="Extension\OperationParameterNillableExtension.cs" />
+    <Compile Include="Extension\ServiceModelBuilderExtension.cs" />
+    <Compile Include="Extension\PascalCaseFieldNamesExtension.cs" />
+    <Compile Include="Extension\OperationParameterPascalCaseExtension.cs" />
+    <Compile Include="Model\ServiceModel.cs" />
+    <Compile Include="Extension\OperationParameterTypeMappingExtension.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Extension\RemoveIExtensibleDataObjectImplementationExtension.cs" />
+    <Compile Include="ServiceImporter.cs" />
+    <Compile Include="Helper\WsdlImporterExtensions.cs" />
+    <Compile Include="Factory\WsdlImporterFactory.cs" />
+    <Compile Include="Factory\XsdDataContractImporterFactory.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
