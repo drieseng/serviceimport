@@ -39,7 +39,7 @@
     <Compile Include="ServiceImportTask.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ServiceImport.Framework\ServiceImport.Framework.csproj">
+    <ProjectReference Include="..\..\ServiceImport.Framework\src\ServiceImport.Framework.csproj">
       <Project>{fa02e3ef-49f8-4418-b660-a3c0a730f0c7}</Project>
       <Name>ServiceImport.Framework</Name>
     </ProjectReference>
