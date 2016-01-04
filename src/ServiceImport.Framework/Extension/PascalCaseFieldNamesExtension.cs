@@ -58,7 +58,12 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
             var compileUnit = context.ServiceContractGenerator.TargetCompileUnit;
 
             foreach (var typeDeclaration in compileUnit.Types())
+            {
+                if (typeDeclaration.IsEnum)
+                    continue;
+
                 PascalCaseTypeMembers(typeDeclaration);
+            }
         }
 
         private static void PascalCaseTypeMembers(CodeTypeDeclaration typeDeclaration)
