@@ -11,9 +11,7 @@ namespace BRail.Nis.ServiceImport.Framework.Helper
     {
         public MetadataSet Discover(string url)
         {
-            DiscoveryClientProtocol disco = new DiscoveryClientProtocol();
-            disco.AllowAutoRedirect = true;
-            disco.UseDefaultCredentials = true;
+            var disco = new DiscoveryClientProtocol {AllowAutoRedirect = true, UseDefaultCredentials = true};
             disco.DiscoverAny(url);
             disco.ResolveAll();
             var results = new Collection<MetadataSection>();

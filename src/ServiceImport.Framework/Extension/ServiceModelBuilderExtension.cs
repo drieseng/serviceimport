@@ -13,7 +13,7 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
 {
     class ServiceModelBuilderExtension : IWsdlImportExtension
     {
-        private ServiceModel _serviceModel;
+        private readonly ServiceModel _serviceModel;
 
         public ServiceModelBuilderExtension(ServiceModel serviceModel)
         {

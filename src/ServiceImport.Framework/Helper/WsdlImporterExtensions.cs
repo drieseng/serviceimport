@@ -10,7 +10,7 @@ namespace BRail.Nis.ServiceImport.Framework.Helper
 {
     internal static class WsdlImporterExtensions
     {
-        private static readonly XmlQualifiedName stringQName = new XmlQualifiedName("string", XmlSchema.Namespace);
+        private static readonly XmlQualifiedName StringQName = new XmlQualifiedName("string", XmlSchema.Namespace);
 
         public static XmlSchemaSet MergeSchemas(this ServiceDescriptionCollection wsdlDocuments, XmlSchemaSet xmlSchemas)
         {
@@ -176,7 +176,7 @@ namespace BRail.Nis.ServiceImport.Framework.Helper
                 return false;
 
             // only simple types with a restriction that has xs:string as base can be mapped to a .NET enumeration
-            if (restriction.BaseTypeName != stringQName)
+            if (restriction.BaseTypeName != StringQName)
                 return false;
 
             // a restriction with zero facets is not mapped to a .NET enumeration

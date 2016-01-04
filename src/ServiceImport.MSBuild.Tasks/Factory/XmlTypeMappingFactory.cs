@@ -1,14 +1,10 @@
-﻿using BRail.Nis.ServiceImport.MSBuild.Tasks.Model;
-using Microsoft.Build.Framework;
-using System;
+﻿using System;
 using System.CodeDom;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Schema;
+using BRail.Nis.ServiceImport.MSBuild.Tasks.Model;
+using Microsoft.Build.Framework;
 
-namespace BRail.Nis.ServiceImport.MSBuild.Tasks.Factories
+namespace BRail.Nis.ServiceImport.MSBuild.Tasks.Factory
 {
     internal class XmlTypeMappingFactory
     {
@@ -24,10 +20,10 @@ namespace BRail.Nis.ServiceImport.MSBuild.Tasks.Factories
                 throw new Exception("CodeTypeReference cannot be null.");
 
             return new XmlTypeMapping
-            {
-                XmlTypeCode = (XmlTypeCode) Enum.Parse(typeof(XmlTypeCode), xmlTypeCode, false),
-                CodeTypeReference = new CodeTypeReference(codeTypeReference)
-            };
+                {
+                    XmlTypeCode = (XmlTypeCode) Enum.Parse(typeof (XmlTypeCode), xmlTypeCode, false),
+                    CodeTypeReference = new CodeTypeReference(codeTypeReference)
+                };
         }
     }
 }

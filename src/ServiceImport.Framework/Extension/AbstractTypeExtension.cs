@@ -1,6 +1,6 @@
-﻿using BRail.Nis.ServiceImport.Framework.Helper;
+﻿using BRail.Nis.ServiceImport.Framework.CodeDom;
+using BRail.Nis.ServiceImport.Framework.Helper;
 using BRail.Nis.ServiceImport.Framework.Model;
-using ServiceImport.Framework.CodeDom;
 using System;
 using System.Collections;
 using System.Collections.Generic;

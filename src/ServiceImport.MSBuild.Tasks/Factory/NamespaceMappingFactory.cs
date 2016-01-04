@@ -1,8 +1,8 @@
-﻿using BRail.Nis.ServiceImport.MSBuild.Tasks.Model;
+﻿using System;
+using BRail.Nis.ServiceImport.MSBuild.Tasks.Model;
 using Microsoft.Build.Framework;
-using System;
 
-namespace BRail.Nis.ServiceImport.MSBuild.Tasks.Factories
+namespace BRail.Nis.ServiceImport.MSBuild.Tasks.Factory
 {
     internal class NamespaceMappingFactory
     {
@@ -19,7 +19,7 @@ namespace BRail.Nis.ServiceImport.MSBuild.Tasks.Factories
 
             return new NamespaceMapping
                 {
-                    CLRNamespace = clrNamespace,
+                    ClrNamespace = clrNamespace,
                     TargetNamespace = targetNamespace
                 };
         }

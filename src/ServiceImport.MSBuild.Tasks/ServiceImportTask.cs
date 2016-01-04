@@ -1,9 +1,8 @@
 ﻿using BRail.Nis.ServiceImport.Framework;
 using BRail.Nis.ServiceImport.Framework.Writer;
-using BRail.Nis.ServiceImport.MSBuild.Tasks.Factories;
+using BRail.Nis.ServiceImport.MSBuild.Tasks.Factory;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
-using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Xml.Schema;
@@ -60,7 +59,7 @@ namespace BRail.Nis.ServiceImport.MSBuild.Tasks
                 foreach (var item in NamespaceMappings)
                 {
                     var namespaceMapping = namespaceMappingFactory.Create(item);
-                    namespaceMappings.Add(namespaceMapping.TargetNamespace, namespaceMapping.CLRNamespace);
+                    namespaceMappings.Add(namespaceMapping.TargetNamespace, namespaceMapping.ClrNamespace);
                 }
             }
 

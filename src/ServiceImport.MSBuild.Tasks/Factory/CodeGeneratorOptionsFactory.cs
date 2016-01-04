@@ -1,8 +1,8 @@
-﻿using Microsoft.Build.Framework;
-using System;
+﻿using System;
 using System.CodeDom.Compiler;
+using Microsoft.Build.Framework;
 
-namespace BRail.Nis.ServiceImport.MSBuild.Tasks
+namespace BRail.Nis.ServiceImport.MSBuild.Tasks.Factory
 {
     internal class CodeGeneratorOptionsFactory
     {
