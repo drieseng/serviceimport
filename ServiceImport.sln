@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceImport.Framework", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceImport.MSBuild.Tasks", "src\ServiceImport.MSBuild.Tasks\src\ServiceImport.MSBuild.Tasks.csproj", "{AFA5D88B-90F2-4691-A0FF-988582DF2B24}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceImport.Framework.Tests", "src\ServiceImport.Framework\test\ServiceImport.Framework.Tests.csproj", "{FAFD8283-F453-40A0-81EA-1617ACA8E262}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{AFA5D88B-90F2-4691-A0FF-988582DF2B24}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AFA5D88B-90F2-4691-A0FF-988582DF2B24}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AFA5D88B-90F2-4691-A0FF-988582DF2B24}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAFD8283-F453-40A0-81EA-1617ACA8E262}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAFD8283-F453-40A0-81EA-1617ACA8E262}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAFD8283-F453-40A0-81EA-1617ACA8E262}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAFD8283-F453-40A0-81EA-1617ACA8E262}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

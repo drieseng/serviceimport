@@ -45,3 +45,16 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# ==============================
+# Visual Studio and NuGet Files
+# ==============================
+.vs
+packages
+/src/ServiceImport.Framework/src/bin/Debug
+/src/ServiceImport.Framework/src/obj/Debug
+/src/ServiceImport.Framework/test/obj/Debug
+/src/ServiceImport.MSBuild.Tasks/src/bin/Debug
+/src/ServiceImport.MSBuild.Tasks/src/obj/Debug
+/src/ServiceImport.Console/src/bin/Debug
+/src/ServiceImport.Console/src/obj/Debug
