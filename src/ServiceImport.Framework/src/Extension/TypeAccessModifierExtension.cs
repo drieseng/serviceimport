@@ -18,7 +18,8 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
                 var typeDeclaration = codeCompileUnit.FindTypeDeclaration(typeName);
                 if (typeDeclaration == null)
                 {
-                    throw new Exception(string.Format("Type '{0}' does not exist.", typeName));
+                    //throw new Exception(string.Format("Type '{0}' does not exist.", typeName));
+                    return;
                 }
 
                 switch (accessModifier)

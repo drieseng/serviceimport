@@ -28,7 +28,15 @@ namespace ServiceImport.Console
                     { "BRail.Nis.WcfContract.ObstructionServiceClient", TypeAccessModifier.Internal },
                 };
 
-            return new Options(wsdl, outputDirectory, xmlTypeMappings, namespaceMappings, typeAccessModifierMappings);
+            var typeRenameMappings = new Dictionary<string, string>
+                {
+                    {
+                        "BRail.Nis.WcfContract.ObstructionServiceClient",
+                        "BRail.Nis.ClientLib.ObstructionServiceReference.ObstructionServiceClient"
+                    }
+                };
+
+            return new Options(wsdl, outputDirectory, xmlTypeMappings, namespaceMappings, typeAccessModifierMappings, typeRenameMappings);
         }
     }
 }

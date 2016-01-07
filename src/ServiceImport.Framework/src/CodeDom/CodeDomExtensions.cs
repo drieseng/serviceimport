@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CodeDom;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BRail.Nis.ServiceImport.Framework.CodeDom
 {
@@ -23,6 +24,16 @@ namespace BRail.Nis.ServiceImport.Framework.CodeDom
                     yield return type;
                 }
             }
+        }
+
+        public static IEnumerable<CodeTypeDeclaration> Types(this CodeNamespace @namespace)
+        {
+            return @namespace.Types.Cast<CodeTypeDeclaration>();
+        }
+
+        public static IEnumerable<CodeNamespace> Namespaces(this CodeCompileUnit compileUnit)
+        {
+            return compileUnit.Namespaces.Cast<CodeNamespace>();
         }
 
         public static IEnumerable<CodeMemberField> Fields(this CodeTypeDeclaration typeDeclaration)

@@ -13,7 +13,8 @@ namespace ServiceImport.Console
             var serviceImporter = new ServiceImporter(options.Wsdl,
                                                       options.XmlTypeMappings,
                                                       options.NamespaceMappings,
-                                                      options.TypeAccessModifierMappings);
+                                                      options.TypeAccessModifierMappings,
+                                                      options.TypeRenameMappings);
 
             serviceImporter.Import(codeWriter);
         }

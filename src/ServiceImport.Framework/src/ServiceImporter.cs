@@ -14,12 +14,13 @@ namespace BRail.Nis.ServiceImport.Framework
 {
     public class ServiceImporter
     {
-        public ServiceImporter(string wsdl, IDictionary<XmlTypeCode, CodeTypeReference> xmlTypeMappings, IDictionary<string, string> namespaceMappings, IDictionary<string, TypeAccessModifier> typeAccessModifiers)
+        public ServiceImporter(string wsdl, IDictionary<XmlTypeCode, CodeTypeReference> xmlTypeMappings, IDictionary<string, string> namespaceMappings, IDictionary<string, TypeAccessModifier> typeAccessModifiers, IDictionary<string, string> typeRenameMappings)
         {
             Wsdl = wsdl;
             XmlTypeMappings = xmlTypeMappings;
             NamespaceMappings = namespaceMappings;
             TypeAccessModifiers = typeAccessModifiers;
+            TypeRenameMappings = typeRenameMappings;
         }
 
         public string Wsdl
@@ -43,6 +44,11 @@ namespace BRail.Nis.ServiceImport.Framework
             get; private set;
         }
 
+        public IDictionary<string, string> TypeRenameMappings
+        {
+            get; private set;
+        }
+
         public void Import(ICodeWriter codeWriter)
         {
             var codeCompileUnit = new CodeCompileUnit();
@@ -58,6 +64,7 @@ namespace BRail.Nis.ServiceImport.Framework
             foreach (var contract in wsdlImporter.ImportAllContracts())
                 serviceContractGenerator.GenerateServiceContractType(contract);
 
+            new TypeRenameExtension().Apply(TypeRenameMappings, codeCompileUnit);
             new TypeAccessModifierExtension().Apply(TypeAccessModifiers, codeCompileUnit);
 
             codeWriter.Write(codeProvider, codeCompileUnit);

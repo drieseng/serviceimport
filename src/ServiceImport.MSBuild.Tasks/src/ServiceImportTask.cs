@@ -28,7 +28,16 @@ namespace BRail.Nis.ServiceImport.MSBuild.Tasks
             set;
         }
 
-        public ITaskItem CodeGeneratorOptions { get; set; }
+        public ITaskItem[] TypeRenameMappings
+        {
+            get;
+            set;
+        }
+
+        public ITaskItem CodeGeneratorOptions
+        {
+            get; set;
+        }
 
         [Required]
         public string Wsdl
@@ -48,8 +57,9 @@ namespace BRail.Nis.ServiceImport.MSBuild.Tasks
             var xmlTypeMappings = CreateXmlTypeMappings();
             var namespaceMappings = CreateNamespaceMappings();
             var typeAccessModifierMappings = CreateTypeAccessModifierMappings();
+            var typeRenameMappings = CreateTypeRenameMappings();
             var codeWriter = new FileSystemCodeWriter(codeGeneratorOptions, OutputDirectory);
-            var serviceImporter = new ServiceImporter(Wsdl, xmlTypeMappings, namespaceMappings, typeAccessModifierMappings);
+            var serviceImporter = new ServiceImporter(Wsdl, xmlTypeMappings, namespaceMappings, typeAccessModifierMappings, typeRenameMappings);
 
             serviceImporter.Import(codeWriter);
 
@@ -110,5 +120,22 @@ namespace BRail.Nis.ServiceImport.MSBuild.Tasks
             return typeAccessModifierMappings;
         }
 
+        private IDictionary<string, string> CreateTypeRenameMappings()
+        {
+            var typeRenameMappings = new Dictionary<string, string>();
+
+            if (TypeRenameMappings != null)
+            {
+                var typeRenameMappingFactory = new TypeRenameMappingFactory();
+
+                foreach (var item in TypeRenameMappings)
+                {
+                    var typeRenameMapping = typeRenameMappingFactory.Create(item);
+                    typeRenameMappings.Add(typeRenameMapping.OriginalTypeName, typeRenameMapping.NewTypeName);
+                }
+            }
+
+            return typeRenameMappings;
+        }
     }
 }

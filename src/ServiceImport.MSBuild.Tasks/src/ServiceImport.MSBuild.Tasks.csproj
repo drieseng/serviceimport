@@ -33,9 +33,11 @@
     <Compile Include="Factory\CodeGeneratorOptionsFactory.cs" />
     <Compile Include="Factory\NamespaceMappingFactory.cs" />
     <Compile Include="Factory\TypeAccessModifierMappingFactory.cs" />
+    <Compile Include="Factory\TypeRenameMappingFactory.cs" />
     <Compile Include="Factory\XmlTypeMappingFactory.cs" />
     <Compile Include="Model\NamespaceMapping.cs" />
     <Compile Include="Model\TypeAccessModifierMapping.cs" />
+    <Compile Include="Model\TypeRenameMapping.cs" />
     <Compile Include="Model\XmlTypeMapping.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceImportTask.cs" />

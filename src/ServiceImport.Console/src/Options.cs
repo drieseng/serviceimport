@@ -7,13 +7,14 @@ namespace ServiceImport.Console
 {
     public class Options
     {
-        public Options(string wsdl, string outputDirectory, IDictionary<XmlTypeCode, CodeTypeReference> xmlTypeMappings, IDictionary<string, string> namespaceMappings, IDictionary<string, TypeAccessModifier> typeAccessModifierMappings)
+        public Options(string wsdl, string outputDirectory, IDictionary<XmlTypeCode, CodeTypeReference> xmlTypeMappings, IDictionary<string, string> namespaceMappings, IDictionary<string, TypeAccessModifier> typeAccessModifierMappings, IDictionary<string, string> typeRenameMappings)
         {
             Wsdl = wsdl;
             OutputDirectory = outputDirectory;
             XmlTypeMappings = xmlTypeMappings;
             NamespaceMappings = namespaceMappings;
             TypeAccessModifierMappings = typeAccessModifierMappings;
+            TypeRenameMappings = typeRenameMappings;
         }
 
         public string Wsdl
@@ -37,6 +38,11 @@ namespace ServiceImport.Console
         }
 
         public IDictionary<string, TypeAccessModifier> TypeAccessModifierMappings
+        {
+            get; private set;
+        }
+
+        public IDictionary<string, string> TypeRenameMappings
         {
             get; private set;
         }
