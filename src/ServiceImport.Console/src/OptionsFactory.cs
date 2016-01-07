@@ -1,6 +1,7 @@
 ﻿using System.CodeDom;
 using System.Collections.Generic;
 using System.Xml.Schema;
+using BRail.Nis.ServiceImport.Framework.CodeDom;
 
 namespace ServiceImport.Console
 {
@@ -18,11 +19,16 @@ namespace ServiceImport.Console
 
             var namespaceMappings = new Dictionary<string, string>
                 {
-                    { "http://www.infrabel.be/A204/Nis", "BRail.Nis.FacadeWcfSvc" },
+                    { "http://www.infrabel.be/A204/Nis", "BRail.Nis.WcfContract" },
                     { "http://www.infrabel.be/A204/Nis/Obstruction", "BRail.Nis.GeneralLib.ContractEntities.Obstruction" }
                 };
 
-            return new Options(wsdl, outputDirectory, xmlTypeMappings, namespaceMappings);
+            var typeAccessModifierMappings = new Dictionary<string, TypeAccessModifier>
+                {
+                    { "BRail.Nis.WcfContract.ObstructionServiceClient", TypeAccessModifier.Internal },
+                };
+
+            return new Options(wsdl, outputDirectory, xmlTypeMappings, namespaceMappings, typeAccessModifierMappings);
         }
     }
 }

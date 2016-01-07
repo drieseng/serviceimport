@@ -1,4 +1,5 @@
 ﻿using BRail.Nis.ServiceImport.Framework;
+using BRail.Nis.ServiceImport.Framework.CodeDom;
 using BRail.Nis.ServiceImport.Framework.Writer;
 using BRail.Nis.ServiceImport.MSBuild.Tasks.Factory;
 using Microsoft.Build.Framework;
@@ -21,6 +22,12 @@ namespace BRail.Nis.ServiceImport.MSBuild.Tasks
             get; set;
         }
 
+        public ITaskItem[] TypeAccessModifierMappings
+        {
+            get;
+            set;
+        }
+
         public ITaskItem CodeGeneratorOptions { get; set; }
 
         [Required]
@@ -40,8 +47,9 @@ namespace BRail.Nis.ServiceImport.MSBuild.Tasks
             var codeGeneratorOptions = new CodeGeneratorOptionsFactory().Create(CodeGeneratorOptions);
             var xmlTypeMappings = CreateXmlTypeMappings();
             var namespaceMappings = CreateNamespaceMappings();
+            var typeAccessModifierMappings = CreateTypeAccessModifierMappings();
             var codeWriter = new FileSystemCodeWriter(codeGeneratorOptions, OutputDirectory);
-            var serviceImporter = new ServiceImporter(Wsdl, xmlTypeMappings, namespaceMappings);
+            var serviceImporter = new ServiceImporter(Wsdl, xmlTypeMappings, namespaceMappings, typeAccessModifierMappings);
 
             serviceImporter.Import(codeWriter);
 
@@ -83,5 +91,24 @@ namespace BRail.Nis.ServiceImport.MSBuild.Tasks
 
             return xmlTypeMappings;
         }
+
+        private IDictionary<string, TypeAccessModifier> CreateTypeAccessModifierMappings()
+        {
+            var typeAccessModifierMappings = new Dictionary<string, TypeAccessModifier>();
+
+            if (TypeAccessModifierMappings != null)
+            {
+                var typeAccessModifierMappingsFactory = new TypeAccessModifierMappingFactory();
+
+                foreach (var item in TypeAccessModifierMappings)
+                {
+                    var typeAccessModifierMapping = typeAccessModifierMappingsFactory.Create(item);
+                    typeAccessModifierMappings.Add(typeAccessModifierMapping.TypeName, typeAccessModifierMapping.AccessModifier);
+                }
+            }
+
+            return typeAccessModifierMappings;
+        }
+
     }
 }

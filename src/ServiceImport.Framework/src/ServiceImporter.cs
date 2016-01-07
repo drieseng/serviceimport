@@ -1,4 +1,6 @@
-﻿using BRail.Nis.ServiceImport.Framework.Factory;
+﻿using BRail.Nis.ServiceImport.Framework.CodeDom;
+using BRail.Nis.ServiceImport.Framework.Extension;
+using BRail.Nis.ServiceImport.Framework.Factory;
 using BRail.Nis.ServiceImport.Framework.Helper;
 using BRail.Nis.ServiceImport.Framework.Writer;
 using Microsoft.CSharp;
@@ -12,11 +14,12 @@ namespace BRail.Nis.ServiceImport.Framework
 {
     public class ServiceImporter
     {
-        public ServiceImporter(string wsdl, IDictionary<XmlTypeCode, CodeTypeReference> xmlTypeMappings, IDictionary<string, string> namespaceMappings)
+        public ServiceImporter(string wsdl, IDictionary<XmlTypeCode, CodeTypeReference> xmlTypeMappings, IDictionary<string, string> namespaceMappings, IDictionary<string, TypeAccessModifier> typeAccessModifiers)
         {
             Wsdl = wsdl;
             XmlTypeMappings = xmlTypeMappings;
             NamespaceMappings = namespaceMappings;
+            TypeAccessModifiers = typeAccessModifiers;
         }
 
         public string Wsdl
@@ -30,6 +33,12 @@ namespace BRail.Nis.ServiceImport.Framework
         }
 
         public IDictionary<string, string> NamespaceMappings
+        {
+            get; private set;
+        }
+
+
+        public IDictionary<string, TypeAccessModifier> TypeAccessModifiers
         {
             get; private set;
         }
@@ -49,6 +58,8 @@ namespace BRail.Nis.ServiceImport.Framework
             foreach (var contract in wsdlImporter.ImportAllContracts())
                 serviceContractGenerator.GenerateServiceContractType(contract);
 
+            new TypeAccessModifierExtension().Apply(TypeAccessModifiers, codeCompileUnit);
+
             codeWriter.Write(codeProvider, codeCompileUnit);
         }
 
@@ -62,7 +73,7 @@ namespace BRail.Nis.ServiceImport.Framework
         {
             var gen = new ServiceContractGenerator(codeCompileUnit)
                 {
-                    Options = ServiceContractGenerationOptions.ClientClass | ServiceContractGenerationOptions.ChannelInterface
+                    Options = ServiceContractGenerationOptions.ClientClass
                 };
             foreach (var namespaceMapping in namespaceMappings)
                 gen.NamespaceMappings.Add(namespaceMapping.Key, namespaceMapping.Value);

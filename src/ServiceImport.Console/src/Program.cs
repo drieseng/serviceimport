@@ -10,7 +10,10 @@ namespace ServiceImport.Console
             var options = new OptionsFactory().Create(args);
             var codeGeneratorOptions = new CodeGeneratorOptionsFactory().Create();
             var codeWriter = new FileSystemCodeWriter(codeGeneratorOptions, options.OutputDirectory);
-            var serviceImporter = new ServiceImporter(options.Wsdl, options.XmlTypeMappings, options.NamespaceMappings);
+            var serviceImporter = new ServiceImporter(options.Wsdl,
+                                                      options.XmlTypeMappings,
+                                                      options.NamespaceMappings,
+                                                      options.TypeAccessModifierMappings);
 
             serviceImporter.Import(codeWriter);
         }

@@ -35,7 +35,7 @@ namespace BRail.Nis.ServiceImport.Framework.Writer
 
                 foreach (CodeTypeDeclaration x in ns.Types)
                 {
-                    CodeCompileUnit compileUnit = new CodeCompileUnit();
+                    var compileUnit = new CodeCompileUnit();
                     var nsType = ns.Clone();
                     nsType.Types.Add(x);
                     compileUnit.Namespaces.Add(nsType);

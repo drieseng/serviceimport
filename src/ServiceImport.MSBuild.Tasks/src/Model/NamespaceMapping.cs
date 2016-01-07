@@ -4,6 +4,5 @@
     {
         public string TargetNamespace { get; set; }
         public string ClrNamespace { get; set; }
-
     }
 }

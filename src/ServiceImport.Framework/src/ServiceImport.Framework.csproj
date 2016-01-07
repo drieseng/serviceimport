@@ -44,6 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeDom\TypeAccessModifier.cs" />
+    <Compile Include="Extension\TypeAccessModifierExtension.cs" />
     <Compile Include="Helper\EnumerableExtensions.cs" />
     <Compile Include="Extension\AbstractTypeExtension.cs" />
     <Compile Include="CodeDom\CodeDomExtensions.cs" />
