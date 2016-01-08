@@ -2,10 +2,18 @@
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel.Description;
 using BRail.Nis.ServiceImport.Framework.CodeDom;
 
 namespace BRail.Nis.ServiceImport.Framework.Extension
 {
+    /// <summary>
+    /// Supports changing the type name and/or namespace of generated type declarations.
+    /// </summary>
+    /// <remarks>
+    /// This is not a WCF extension because the client class of not yet available when <see cref="IServiceContractGenerationExtension.GenerateContract(ServiceContractGenerationContext)"/>
+    /// is invoked.
+    /// </remarks>
     public class TypeRenameExtension
     {
         public void Apply(IDictionary<string, string> typeRenames, CodeCompileUnit codeCompileUnit)
@@ -17,7 +25,7 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
 
                 var typeDeclaration = codeCompileUnit.FindTypeDeclaration(originalTypeName);
                 if (typeDeclaration == null)
-                    throw new Exception();
+                    throw new Exception(string.Format("Type '{0}' does not exist.", originalTypeName));
 
                 // lookup the original namespace
                 var originalNamespace = codeCompileUnit.Namespaces().Single(n => n.Name == originalTypeName.Namespace);
@@ -27,7 +35,7 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
                 if (originalTypeName.Namespace == newTypeName.Namespace)
                 {
                     if (originalNamespace.Types().SingleOrDefault(t => t.Name == newTypeName.Type) != null)
-                        throw new Exception("Type already exists.");
+                        throw new Exception(string.Format("Type '{0}' already exists.", newTypeName));
 
                     // modify the name of the type
                     typeDeclaration.Name = newTypeName.Type;
@@ -44,7 +52,7 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
                 else
                 {
                     if (newNamespace.Types().Any(p => p.Name == newTypeName.Type))
-                        throw new Exception("Type already exists.");
+                        throw new Exception(string.Format("Type '{0}' already exists.", newTypeName));
                 }
 
                 // modify the name of the type
