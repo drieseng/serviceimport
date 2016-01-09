@@ -2,7 +2,6 @@
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
-using System.ServiceModel.Description;
 using BRail.Nis.ServiceImport.Framework.CodeDom;
 
 namespace BRail.Nis.ServiceImport.Framework.Extension
@@ -18,6 +17,11 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
     {
         public void Apply(IDictionary<string, string> typeRenames, CodeCompileUnit codeCompileUnit)
         {
+            if (typeRenames == null)
+                throw new ArgumentNullException("typeRenames");
+            if (codeCompileUnit == null)
+                throw new ArgumentNullException("codeCompileUnit");
+
             foreach (var typeRenameEntry in typeRenames)
             {
                 var originalTypeName = (CodeTypeName) typeRenameEntry.Key;
