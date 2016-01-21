@@ -16,10 +16,12 @@ Increasing the level of configurability should be a rather minor task though.
 
 ### Richness
 
-XML Schema is a DSL allowing constructs and precisions that are impossible to represent in a class diagram.
+XML Schema is a DSL allowing constructs and precisions that are hard or impossible to represent in a .NET type definition.
 It does so in way that is easy to understand and visualize.
 
 **TO DO:** example of XSD fragment
+
+WSDLs and XSDs do not express the same fine-grained intent when designed in a code-first style.
 
 ### Versioning
 
@@ -30,7 +32,11 @@ It does so in way that is easy to understand and visualize.
 Introducing changes to a contract should be an explicit and very deliberate action.
 In a code-first approach, there's all too little friction to keep one from making undesired changes.
 Your mileage may vary of course.
- 
+
+### Interoperability
+
+Designing an interoperable web service requires attenion for, and knowledge of, subtle differences between various implementations. WSDLs and XSDs generated from code often do not play by the rules, and only tend to fully interoperate with applications from the same ecosystem.
+
 ## Features
 
 ### Abstract types
