@@ -4,20 +4,24 @@ namespace BRail.Nis.ServiceImport.Framework.Model
 {
     public class Element
     {
-        public Element(string name, XmlSchemaType schemaType, decimal minOccurs, decimal maxOccurs)
+        private readonly XmlSchemaElement _schemaElement;
+
+        internal Element(XmlSchemaElement schemaElement)
         {
-            Name = name;
-            SchemaType = schemaType;
-            MinOccurs = minOccurs;
-            MaxOccurs = maxOccurs;
+            _schemaElement = schemaElement;
         }
 
-        public string Name { get; private set; }
+        public string Name => _schemaElement.Name;
 
-        public XmlSchemaType SchemaType { get; private set; }
+        public XmlTypeCode TypeCode => _schemaElement.ElementSchemaType.TypeCode;
 
-        public decimal MaxOccurs { get; private set; }
+        public decimal MaxOccurs => _schemaElement.MaxOccurs;
 
-        public decimal MinOccurs { get; private set; }
+        public decimal MinOccurs => _schemaElement.MinOccurs;
+
+        public bool IsNillable {
+            get { return _schemaElement.IsNillable; }
+            set { _schemaElement.IsNillable = value; }
+        }
     }
 }

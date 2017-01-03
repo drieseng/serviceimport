@@ -8,11 +8,11 @@ namespace BRail.Nis.ServiceImport.Framework.CodeDom
         public CodeTypeName(string @namespace, string type)
         {
             if (@namespace == null)
-                throw new ArgumentNullException("namespace");
+                throw new ArgumentNullException(nameof(@namespace));
             if (type == null)
-                throw new ArgumentNullException("type");
+                throw new ArgumentNullException(nameof(type));
             if (type.Length == 0)
-                throw new ArgumentException("Cannot be a zero-length string.", "type");
+                throw new ArgumentException("Cannot be a zero-length string.", nameof(type));
 
             Namespace = @namespace;
             Type = type;
@@ -20,13 +20,11 @@ namespace BRail.Nis.ServiceImport.Framework.CodeDom
 
         public string Namespace
         {
-            get; private set;
-        }
+            get; }
 
         public string Type
         {
-            get; private set;
-        }
+            get; }
 
         public override string ToString()
         {

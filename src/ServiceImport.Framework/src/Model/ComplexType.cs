@@ -5,7 +5,7 @@ namespace BRail.Nis.ServiceImport.Framework.Model
 {
     public class ComplexType
     {
-        public ComplexType(XmlQualifiedName qualifiedName, bool isAbstract, IDictionary<string, Element> elements)
+        internal ComplexType(XmlQualifiedName qualifiedName, bool isAbstract, IList<Element> elements)
         {
             QualifiedName = qualifiedName;
             IsAbstract = isAbstract;
@@ -14,7 +14,7 @@ namespace BRail.Nis.ServiceImport.Framework.Model
 
         public bool IsAbstract { get; private set; }
 
-        public IDictionary<string, Element> Elements { get; private set; }
+        public IList<Element> Elements { get; private set; }
 
         public XmlQualifiedName QualifiedName { get; private set; }
     }

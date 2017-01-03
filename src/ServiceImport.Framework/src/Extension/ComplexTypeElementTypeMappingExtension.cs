@@ -15,7 +15,7 @@ using System.Xml.Schema;
 
 namespace BRail.Nis.ServiceImport.Framework.Extension
 {
-    public class ComplexTypeElementTypeMappingExtension : IServiceContractGenerationExtension, IWsdlImportExtension, IContractBehavior
+    public class ComplexTypeElementTypeMappingExtension : IServiceContractGenerationExtension, IWsdlImportExtension, IContractBehavior, IXsdImportExtension
     {
         private XsdDataContractImporter _xsdDataContractImporter;
         private readonly IDictionary<XmlTypeCode, CodeTypeReference> _xmlTypeMapping;
@@ -36,7 +36,6 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
         public void ImportContract(WsdlImporter importer, WsdlContractConversionContext context)
         {
             _xsdDataContractImporter = importer.Get<XsdDataContractImporter>();
-
             context.Contract.ContractBehaviors.Add(this);
         }
 
@@ -73,7 +72,43 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
             // use the compile unit of the ServiceContractGenerator to have types defined
             // in XSDs and WSDLs
             var compileUnit = context.ServiceContractGenerator.TargetCompileUnit;
+            MapTypes(compileUnit);
+        }
 
+        #endregion IServiceContractGenerationExtension implementation
+
+        #region IXsdImportExtension implementation
+
+        /// <summary>
+        /// Called prior to importing metadata documents.
+        /// </summary>
+        /// <param name="xmlSchemas">The schema collection to import.</param>
+        void IXsdImportExtension.BeforeImport(XmlSchemaSet xmlSchemas)
+        {
+        }
+
+        /// <summary>
+        /// Called when importing a contract.
+        /// </summary>
+        /// <param name="importer">The importer.</param>
+        void IXsdImportExtension.ImportContract(XsdDataContractImporter importer)
+        {
+            _xsdDataContractImporter = importer;
+        }
+
+        #endregion IXsdImportExtension implementation
+
+        #region IDataContractGenerationExtension implementation
+
+        void IDataContractGenerationExtension.GenerateContract(CodeCompileUnit compileUnit)
+        {
+            MapTypes(compileUnit);
+        }
+
+        #endregion IDataContractGenerationExtension implementation
+
+        private void MapTypes(CodeCompileUnit compileUnit)
+        {
             foreach (var complexType in _serviceModel.ComplexTypes)
             {
                 var typeReference = _xsdDataContractImporter.GetCodeTypeReference(complexType.QualifiedName);
@@ -86,15 +121,15 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
 
                 foreach (var property in typeDeclaration.Properties())
                 {
-                    Element element;
-                    if (!complexType.Elements.TryGetValue(property.Name, out element))
+                    var element = complexType.Elements.SingleOrDefault(p => p.Name == property.Name);
+                    if (element == null)
                         throw new Exception();
 
                     if (element.MaxOccurs != 1)
                         continue;
 
                     CodeTypeReference elementTypeReference;
-                    if (!_xmlTypeMapping.TryGetValue(element.SchemaType.TypeCode, out elementTypeReference))
+                    if (!_xmlTypeMapping.TryGetValue(element.TypeCode, out elementTypeReference))
                         continue;
 
                     if (element.MinOccurs == 0)
@@ -120,10 +155,7 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
                         }
                     }
                 }
-
             }
         }
-
-        #endregion IServiceContractGenerationExtension implementation
     }
 }

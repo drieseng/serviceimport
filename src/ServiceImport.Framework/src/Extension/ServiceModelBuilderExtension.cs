@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.ServiceModel.Description;
 using System.Web.Services.Description;
@@ -6,12 +7,13 @@ using System.Xml;
 using System.Xml.Schema;
 using SWSServiceDecription = System.Web.Services.Description.ServiceDescription;
 using System.Collections;
+using System.Runtime.Serialization;
 using BRail.Nis.ServiceImport.Framework.Model;
 using BRail.Nis.ServiceImport.Framework.Helper;
 
 namespace BRail.Nis.ServiceImport.Framework.Extension
 {
-    class ServiceModelBuilderExtension : IWsdlImportExtension
+    class ServiceModelBuilderExtension : IWsdlImportExtension, IXsdImportExtension
     {
         private readonly ServiceModel _serviceModel;
 
@@ -20,7 +22,9 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
             _serviceModel = serviceModel;
         }
 
-        public void BeforeImport(ServiceDescriptionCollection wsdlDocuments, XmlSchemaSet xmlSchemas, ICollection<XmlElement> policy)
+        #region IWsdlImportExtension implementation
+
+        void IWsdlImportExtension.BeforeImport(ServiceDescriptionCollection wsdlDocuments, XmlSchemaSet xmlSchemas, ICollection<XmlElement> policy)
         {
             // unite both inline (in WSDLs) and standalone schemas
             _serviceModel.XmlSchemas = wsdlDocuments.MergeSchemas(xmlSchemas);
@@ -32,13 +36,38 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
             complexTypes.ForEach(c => _serviceModel.ComplexTypes.Add(c));
         }
 
-        public void ImportContract(WsdlImporter importer, WsdlContractConversionContext context)
+        void IWsdlImportExtension.ImportContract(WsdlImporter importer, WsdlContractConversionContext context)
         {
         }
 
-        public void ImportEndpoint(WsdlImporter importer, WsdlEndpointConversionContext context)
+        void IWsdlImportExtension.ImportEndpoint(WsdlImporter importer, WsdlEndpointConversionContext context)
         {
         }
+
+        #endregion IWsdlImportExtension implementation
+
+        #region IXsdImportExtension implementation
+
+        void IXsdImportExtension.BeforeImport(XmlSchemaSet xmlSchemas)
+        {
+            _serviceModel.XmlSchemas = xmlSchemas;
+            var complexTypes = GetComplexTypes(_serviceModel.XmlSchemas);
+            complexTypes.ForEach(c => _serviceModel.ComplexTypes.Add(c));
+        }
+
+        void IXsdImportExtension.ImportContract(XsdDataContractImporter importer)
+        {
+        }
+
+        #endregion IXsdImportExtension implementation
+
+        #region IDataContractGenerationExtension implementation
+
+        void IDataContractGenerationExtension.GenerateContract(CodeCompileUnit compileUnit)
+        {
+        }
+
+        #endregion IDataContractGenerationExtension implementation
 
         private IEnumerable<ComplexType> GetComplexTypes(XmlSchemaSet xmlSchemas)
         {
@@ -50,12 +79,13 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
                 if (complexType == null || complexType.Name == null)
                     continue;
 
-                var elements = new Dictionary<string, Element>();
+                var elements = new List<Element>();
 
                 foreach (var element in complexType.GetSequenceElements())
                 {
-                    var schemaType = element.ElementSchemaType;
-                    elements.Add(element.Name, new Element(element.Name, schemaType, element.MinOccurs, element.MaxOccurs));
+                    //element.SchemaTypeName = new XmlQualifiedName("guid", "http://schemas.microsoft.com/2003/10/Serialization/");
+
+                    elements.Add(new Element(element));
                 }
 
                 yield return new ComplexType(complexType.QualifiedName, complexType.IsAbstract, elements);
@@ -85,7 +115,7 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
 
                                 var wrapperElement = _serviceModel.XmlSchemas.GlobalElements[parametersPart.Element] as XmlSchemaElement;
                                 if (wrapperElement == null)
-                                    throw new Exception(string.Format("Wrapper element '{0}' could not be found.", parametersPart.Element));
+                                    throw new Exception($"Wrapper element '{parametersPart.Element}' could not be found.");
 
                                 foreach (var parameterElement in wrapperElement.GetWrapperElementParameters())
                                     operationParameters.Add(parameterElement.Name, new OperationParameterInfo(parameterElement));

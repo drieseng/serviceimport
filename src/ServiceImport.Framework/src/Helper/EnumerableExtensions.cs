@@ -21,12 +21,12 @@ namespace BRail.Nis.ServiceImport.Framework.Helper
         public static T SingleOrDefault<T>(this IEnumerable source, Func<T, bool> predicate)
         {
             if (source == null)
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
             if (predicate == null)
-                throw new ArgumentNullException("predicate");
+                throw new ArgumentNullException(nameof(predicate));
 
             T ret = default(T);
-            bool foundAny = false;
+            var foundAny = false;
 
             foreach (T value in source)
             {
@@ -54,9 +54,9 @@ namespace BRail.Nis.ServiceImport.Framework.Helper
         public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
         {
             if (source == null)
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
             if (action == null)
-                throw new ArgumentNullException("action");
+                throw new ArgumentNullException(nameof(action));
 
             foreach (var item in source)
                 action(item);

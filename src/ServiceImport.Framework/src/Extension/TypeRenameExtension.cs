@@ -2,6 +2,9 @@
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.ServiceModel.Description;
+using System.Xml.Schema;
 using BRail.Nis.ServiceImport.Framework.CodeDom;
 
 namespace BRail.Nis.ServiceImport.Framework.Extension
@@ -10,36 +13,54 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
     /// Supports changing the type name and/or namespace of generated type declarations.
     /// </summary>
     /// <remarks>
-    /// This is not a WCF extension because the client class of not yet available when <see cref="IServiceContractGenerationExtension.GenerateContract(ServiceContractGenerationContext)"/>
+    /// This is not a WCF extension because the client class is not yet available when <see cref="IServiceContractGenerationExtension.GenerateContract(ServiceContractGenerationContext)"/>
     /// is invoked.
     /// </remarks>
-    public class TypeRenameExtension
+    public class TypeRenameExtension : IXsdImportExtension
     {
-        public void Apply(IDictionary<string, string> typeRenames, CodeCompileUnit codeCompileUnit)
+        private readonly IDictionary<string, string> _typeRenames;
+
+        public TypeRenameExtension(IDictionary<string, string> typeRenames)
         {
             if (typeRenames == null)
-                throw new ArgumentNullException("typeRenames");
-            if (codeCompileUnit == null)
-                throw new ArgumentNullException("codeCompileUnit");
+                throw new ArgumentNullException(nameof(typeRenames));
 
-            foreach (var typeRenameEntry in typeRenames)
+            _typeRenames = typeRenames;
+        }
+
+        #region IXsdImportExtension implementation
+
+        void IXsdImportExtension.BeforeImport(XmlSchemaSet xmlSchemas)
+        {
+        }
+
+        void IXsdImportExtension.ImportContract(XsdDataContractImporter importer)
+        {
+        }
+
+        void IDataContractGenerationExtension.GenerateContract(CodeCompileUnit compileUnit)
+        {
+            if (compileUnit == null)
+                throw new ArgumentNullException(nameof(compileUnit));
+
+            foreach (var typeRenameEntry in _typeRenames)
             {
                 var originalTypeName = (CodeTypeName) typeRenameEntry.Key;
                 var newTypeName = (CodeTypeName) typeRenameEntry.Value;
 
-                var typeDeclaration = codeCompileUnit.FindTypeDeclaration(originalTypeName);
+                var typeDeclaration = compileUnit.FindTypeDeclaration(originalTypeName);
                 if (typeDeclaration == null)
-                    throw new Exception(string.Format("Type '{0}' does not exist.", originalTypeName));
+                    throw new Exception($"Type '{originalTypeName}' does not exist.");
 
                 // lookup the original namespace
-                var originalNamespace = codeCompileUnit.Namespaces().Single(n => n.Name == originalTypeName.Namespace);
+                var originalNamespace = compileUnit.Namespaces().Single(n => n.Name == originalTypeName.Namespace);
 
                 // if both the original and new type name are in the same namespace, then we need to
                 // ensure the new type name doesn't already exist in the original namespace
                 if (originalTypeName.Namespace == newTypeName.Namespace)
                 {
                     if (originalNamespace.Types().SingleOrDefault(t => t.Name == newTypeName.Type) != null)
-                        throw new Exception(string.Format("Type '{0}' already exists.", newTypeName));
+                        throw new Exception($"Type '{newTypeName}' already exists.");
 
                     // modify the name of the type
                     typeDeclaration.Name = newTypeName.Type;
@@ -47,16 +68,16 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
                     continue;
                 }
 
-                var newNamespace = codeCompileUnit.Namespaces().SingleOrDefault(n => n.Name == newTypeName.Namespace);
+                var newNamespace = compileUnit.Namespaces().SingleOrDefault(n => n.Name == newTypeName.Namespace);
                 if (newNamespace == null)
                 {
                     newNamespace = new CodeNamespace(newTypeName.Namespace);
-                    codeCompileUnit.Namespaces.Add(newNamespace);
+                    compileUnit.Namespaces.Add(newNamespace);
                 }
                 else
                 {
                     if (newNamespace.Types().Any(p => p.Name == newTypeName.Type))
-                        throw new Exception(string.Format("Type '{0}' already exists.", newTypeName));
+                        throw new Exception($"Type '{newTypeName}' already exists.");
                 }
 
                 // modify the name of the type
@@ -70,8 +91,10 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
 
                 // remove the original namespace if we just removed the last type from it
                 if (originalNamespace.Types.Count == 0)
-                    codeCompileUnit.Namespaces.Remove(originalNamespace);
+                    compileUnit.Namespaces.Remove(originalNamespace);
             }
         }
+
+        #endregion IXsdImportExtension implementation
     }
 }

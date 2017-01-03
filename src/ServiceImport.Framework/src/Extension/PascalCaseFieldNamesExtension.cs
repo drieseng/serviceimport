@@ -1,6 +1,7 @@
 ﻿using BRail.Nis.ServiceImport.Framework.CodeDom;
 using System.CodeDom;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
 using System.ServiceModel.Dispatcher;
@@ -10,7 +11,7 @@ using System.Xml.Schema;
 
 namespace BRail.Nis.ServiceImport.Framework.Extension
 {
-    public class PascalCaseFieldNamesExtension : IWsdlImportExtension, IContractBehavior, IServiceContractGenerationExtension
+    public class PascalCaseFieldNamesExtension : IWsdlImportExtension, IContractBehavior, IServiceContractGenerationExtension, IXsdImportExtension
     {
         #region IWsdlImportExtension implementation
 
@@ -51,12 +52,35 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
 
         #region IServiceContractGenerationExtension implementation
 
-        public void GenerateContract(ServiceContractGenerationContext context)
+        void IServiceContractGenerationExtension.GenerateContract(ServiceContractGenerationContext context)
         {
             // use the compile unit of the ServiceContractGenerator to have types defined
             // in XSDs and WSDLs
             var compileUnit = context.ServiceContractGenerator.TargetCompileUnit;
+            PascalCaseTypeMembers(compileUnit);
+        }
 
+        #endregion IServiceContractGenerationExtension implementation
+
+        #region IXsdImportExtension implementation
+
+        void IXsdImportExtension.BeforeImport(XmlSchemaSet xmlSchemas)
+        {
+        }
+
+        void IXsdImportExtension.ImportContract(XsdDataContractImporter importer)
+        {
+        }
+
+        void IDataContractGenerationExtension.GenerateContract(CodeCompileUnit compileUnit)
+        {
+            PascalCaseTypeMembers(compileUnit);
+        }
+
+        #endregion IXsdImportExtension implementation
+
+        private static void PascalCaseTypeMembers(CodeCompileUnit compileUnit)
+        {
             foreach (var typeDeclaration in compileUnit.Types())
             {
                 if (typeDeclaration.IsEnum)
@@ -114,7 +138,5 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
                     PascalCaseTypeMembers(type);
             }
         }
-
-        #endregion IServiceContractGenerationExtension implementation
     }
 }

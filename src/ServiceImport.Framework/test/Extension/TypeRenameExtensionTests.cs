@@ -11,21 +11,14 @@ namespace BRail.Nis.ServiceImport.Framework.Tests.Extension
     [TestFixture]
     public class TypeRenameExtensionTests
     {
-        private TypeRenameExtension _typeRenameExtension;
-
-        [SetUp]
-        public void SetUp()
-        {
-            _typeRenameExtension = new TypeRenameExtension();
-        }
-
         [Test]
         public void Apply_ShouldThrowArgumentNullExceptionWhenCodeCompileUnitsIsNull()
         {
             var typeRenames = new Dictionary<string,string>();
+            IDataContractGenerationExtension typeRenameExtension = new TypeRenameExtension(typeRenames);
             const CodeCompileUnit codeCompileUnit = null;
 
-            var ane = Assert.Throws<ArgumentNullException>(() => _typeRenameExtension.Apply(typeRenames, codeCompileUnit));
+            var ane = Assert.Throws<ArgumentNullException>(() => typeRenameExtension.GenerateContract(codeCompileUnit));
             Assert.IsNull(ane.InnerException);
             Assert.AreEqual("codeCompileUnit", ane.ParamName);
         }
@@ -34,9 +27,10 @@ namespace BRail.Nis.ServiceImport.Framework.Tests.Extension
         public void Apply_ShouldThrowArgumentNullExceptionWhenTypeRenamesIsNull()
         {
             const Dictionary<string, string> typeRenames = null;
+            IDataContractGenerationExtension typeRenameExtension = new TypeRenameExtension(typeRenames);
             var codeCompileUnit = new CodeCompileUnit();
 
-            var ane = Assert.Throws<ArgumentNullException>(() => _typeRenameExtension.Apply(typeRenames, codeCompileUnit));
+            var ane = Assert.Throws<ArgumentNullException>(() => typeRenameExtension.GenerateContract(codeCompileUnit));
             Assert.IsNull(ane.InnerException);
             Assert.AreEqual("typeRenames", ane.ParamName);
         }
@@ -50,7 +44,7 @@ namespace BRail.Nis.ServiceImport.Framework.Tests.Extension
                 {
                     {"System.Net.Byte", "System.Byte"}
                 };
-
+            IDataContractGenerationExtension typeRenameExtension = new TypeRenameExtension(typeRenames);
             var codeCompileUnit = new CodeCompileUnit();
 
             var systemNamespace = new CodeNamespace("System");
@@ -66,7 +60,7 @@ namespace BRail.Nis.ServiceImport.Framework.Tests.Extension
 
             #region Act
 
-            _typeRenameExtension.Apply(typeRenames, codeCompileUnit);
+            typeRenameExtension.GenerateContract(codeCompileUnit);
 
             #endregion Act
 
@@ -93,7 +87,7 @@ namespace BRail.Nis.ServiceImport.Framework.Tests.Extension
                 {
                     {"System.Net.Byte", "System.Byte"}
                 };
-
+            IDataContractGenerationExtension typeRenameExtension = new TypeRenameExtension(typeRenames);
             var codeCompileUnit = new CodeCompileUnit();
 
             var systemNamespace = new CodeNamespace("System");
@@ -108,7 +102,7 @@ namespace BRail.Nis.ServiceImport.Framework.Tests.Extension
 
             #region Act
 
-            _typeRenameExtension.Apply(typeRenames, codeCompileUnit);
+            typeRenameExtension.GenerateContract(codeCompileUnit);
 
             #endregion Act
 
@@ -135,7 +129,7 @@ namespace BRail.Nis.ServiceImport.Framework.Tests.Extension
                 {
                     {"System.Int32", "System.Byte"}
                 };
-
+            IDataContractGenerationExtension typeRenameExtension = new TypeRenameExtension(typeRenames);
             var codeCompileUnit = new CodeCompileUnit();
 
             var systemNamespace = new CodeNamespace("System");
@@ -147,7 +141,7 @@ namespace BRail.Nis.ServiceImport.Framework.Tests.Extension
 
             #region Act
 
-            _typeRenameExtension.Apply(typeRenames, codeCompileUnit);
+            typeRenameExtension.GenerateContract(codeCompileUnit);
 
             #endregion Act
 

@@ -25,7 +25,7 @@ namespace ServiceImport.Console
 
             var typeAccessModifierMappings = new Dictionary<string, TypeAccessModifier>
                 {
-                    { "BRail.Nis.WcfContract.ObstructionServiceClient", TypeAccessModifier.Internal },
+                    { "BRail.Nis.WcfContract.ObstructionServiceClient", TypeAccessModifier.Internal }
                 };
 
             var typeRenameMappings = new Dictionary<string, string>

@@ -21,7 +21,7 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
     /// <remarks>
     /// This is done to ensure the types of corresponding properties in the generated code are nullable in case of value types.
     /// </remarks>
-    public class ComplexTypeOptionalElementsNillableExtension : IWsdlImportExtension, IServiceContractGenerationExtension, IContractBehavior
+    public class ComplexTypeOptionalElementsNillableExtension : IWsdlImportExtension, IServiceContractGenerationExtension, IContractBehavior, IXsdImportExtension
     {
         private readonly ServiceModel _serviceModel;
         private XsdDataContractImporter _xsdDataContractImporter;
@@ -33,20 +33,9 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
 
         #region IWsdlImportExtension implementation
 
-        public void BeforeImport(ServiceDescriptionCollection wsdlDocuments, XmlSchemaSet xmlSchemas, ICollection<XmlElement> policy)
+        void IWsdlImportExtension.BeforeImport(ServiceDescriptionCollection wsdlDocuments, XmlSchemaSet xmlSchemas, ICollection<XmlElement> policy)
         {
-            foreach (DictionaryEntry globalTypeEntry in _serviceModel.XmlSchemas.GlobalTypes)
-            {
-                var globalType = globalTypeEntry.Value;
-
-                var complexType = globalType as XmlSchemaComplexType;
-                if (complexType == null || complexType.Name == null)
-                    continue;
-
-                foreach (var element in complexType.GetSequenceElements())
-                    if (element.MinOccurs == 0)
-                        element.IsNillable = true;
-            }
+            MarkOptionalElementsNillable();
         }
 
         void IWsdlImportExtension.ImportContract(WsdlImporter importer, WsdlContractConversionContext context)
@@ -83,16 +72,53 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
 
         #region IServiceContractGenerationExtension implementation
 
-        public void GenerateContract(ServiceContractGenerationContext context)
+        void IServiceContractGenerationExtension.GenerateContract(ServiceContractGenerationContext context)
         {
             // use the compile unit of the ServiceContractGenerator to have types defined
             // in XSDs and WSDLs
             var compileUnit = context.ServiceContractGenerator.TargetCompileUnit;
+            FixEmitDefaultValue(compileUnit);
+        }
 
+        #endregion IServiceContractGenerationExtension implementation
+
+        #region IXsdImportExtension implementation
+
+        void IXsdImportExtension.BeforeImport(XmlSchemaSet xmlSchemas)
+        {
+            MarkOptionalElementsNillable();
+        }
+
+        void IXsdImportExtension.ImportContract(XsdDataContractImporter importer)
+        {
+            _xsdDataContractImporter = importer;
+        }
+
+        void IDataContractGenerationExtension.GenerateContract(CodeCompileUnit compileUnit)
+        {
+            FixEmitDefaultValue(compileUnit);
+        }
+
+        #endregion IXsdImportExtension implementation
+
+        private void MarkOptionalElementsNillable()
+        {
+            foreach (var complexType in _serviceModel.ComplexTypes)
+                foreach (var element in complexType.Elements)
+                    if (element.MinOccurs == 0)
+                        element.IsNillable = true;
+        }
+
+        /// <summary>
+        /// For those properties for which <see cref="DataMemberAttribute.IsRequired"/> is <c>true</c>, set <see cref="DataMemberAttribute.EmitDefaultValue"/>
+        /// to <c>true</c>; otherwise, set <see cref="DataMemberAttribute.EmitDefaultValue"/> to <c>false</c>.
+        /// </summary>
+        /// <param name="compileUnit">The compile unit.</param>
+        private void FixEmitDefaultValue(CodeCompileUnit compileUnit)
+        {
             foreach (var complexType in _serviceModel.ComplexTypes)
             {
                 var typeReference = _xsdDataContractImporter.GetCodeTypeReference(complexType.QualifiedName);
-
                 var typeDeclaration = compileUnit.FindTypeDeclaration(typeReference.BaseType);
 
                 // skip complex type for which no type was generated (eg. a List<>)
@@ -101,31 +127,50 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
 
                 foreach (var property in typeDeclaration.Properties())
                 {
-                    Element element;
-                    if (!complexType.Elements.TryGetValue(property.Name, out element))
-                        throw new Exception();
-
-                    if (element.MaxOccurs != 1 || element.MinOccurs != 0)
-                        continue;
-
                     var dataMemberAttribute = property.CustomAttributes.SingleOrDefault<CodeAttributeDeclaration>(p => p.Name == typeof(DataMemberAttribute).FullName);
                     if (dataMemberAttribute == null)
-                        throw new Exception();
+                        continue;
 
-                    var emitDefaultValueArgument = dataMemberAttribute.Arguments.SingleOrDefault<CodeAttributeArgument>(p => p.Name == "EmitDefaultValue");
+                    var emitDefaultValue = IsRequired(dataMemberAttribute);
+
+                    var emitDefaultValueArgument = dataMemberAttribute.Arguments.SingleOrDefault<CodeAttributeArgument>(p => p.Name == nameof(DataMemberAttribute.EmitDefaultValue));
                     if (emitDefaultValueArgument == null)
                     {
-                        emitDefaultValueArgument = new CodeAttributeArgument("EmitDefaultValue", new CodePrimitiveExpression(false));
+                        emitDefaultValueArgument = new CodeAttributeArgument("EmitDefaultValue", new CodePrimitiveExpression(emitDefaultValue));
                         dataMemberAttribute.Arguments.Add(emitDefaultValueArgument);
                     }
                     else
                     {
-                        emitDefaultValueArgument.Value = new CodePrimitiveExpression(false);
+                        emitDefaultValueArgument.Value = new CodePrimitiveExpression(emitDefaultValue);
                     }
                 }
             }
         }
 
-        #endregion IServiceContractGenerationExtension implementation
+        private static bool IsRequired(CodeAttributeDeclaration dataMemberAttribute)
+        {
+            var isRequiredArgument = dataMemberAttribute.Arguments.SingleOrDefault<CodeAttributeArgument>(p => p.Name == nameof(DataMemberAttribute.IsRequired));
+            if (isRequiredArgument == null)
+                return false;
+
+            var value = isRequiredArgument.Value;
+            if (value == null)
+                throw new ArgumentException($"The value of '{nameof(DataMemberAttribute.IsRequired)}' cannot be null.", nameof(dataMemberAttribute));
+
+            var primitiveExpression = value as CodePrimitiveExpression;
+            if (primitiveExpression == null)
+                throw new ArgumentException($"The value of '{nameof(DataMemberAttribute.IsRequired)}' should be a primitive expression.", nameof(dataMemberAttribute));
+
+            var primitiveValue = primitiveExpression.Value;
+            if (primitiveValue == null)
+                throw new ArgumentException($"The primitive value of '{nameof(DataMemberAttribute.IsRequired)}' cannot be null.", nameof(dataMemberAttribute));
+
+            if (!(primitiveValue is bool))
+            {
+                throw new ArgumentException($"The primitive value of '{nameof(DataMemberAttribute.IsRequired)}' should be of type '{typeof(bool).FullName}'.", nameof(dataMemberAttribute));
+            }
+
+            return (bool) primitiveValue;
+        }
     }
 }

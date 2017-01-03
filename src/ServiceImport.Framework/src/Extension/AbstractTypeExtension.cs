@@ -2,6 +2,7 @@
 using BRail.Nis.ServiceImport.Framework.Helper;
 using BRail.Nis.ServiceImport.Framework.Model;
 using System;
+using System.CodeDom;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -26,7 +27,7 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
     /// </para>
     /// </summary>
     /// <seealso cref="!:https://msdn.microsoft.com/en-us/library/ms733112.aspx"/>
-    public class AbstractTypeExtension : IServiceContractGenerationExtension, IWsdlImportExtension, IContractBehavior
+    public class AbstractTypeExtension : IServiceContractGenerationExtension, IWsdlImportExtension, IContractBehavior, IXsdImportExtension, IDataContractGenerationExtension
     {
         private XsdDataContractImporter _xsdDataContractImporter;
         private readonly ServiceModel _serviceModel;
@@ -40,17 +41,7 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
 
         void IWsdlImportExtension.BeforeImport(ServiceDescriptionCollection wsdlDocuments, XmlSchemaSet xmlSchemas, ICollection<XmlElement> policy)
         {
-            foreach (DictionaryEntry globalTypeEntry in _serviceModel.XmlSchemas.GlobalTypes)
-            {
-                var globalType = globalTypeEntry.Value;
-
-                var complexType = globalType as XmlSchemaComplexType;
-                if (complexType == null || complexType.Name == null)
-                    continue;
-
-                if (complexType.IsAbstract)
-                    complexType.IsAbstract = false;
-            }
+            UnsetIsAbstractFlagOnGlobalComplexType(_serviceModel.XmlSchemas);
         }
 
         public void ImportContract(WsdlImporter importer, WsdlContractConversionContext context)
@@ -93,7 +84,52 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
             // use the compile unit of the ServiceContractGenerator to have types defined
             // in XSDs and WSDLs
             var compileUnit = context.ServiceContractGenerator.TargetCompileUnit;
+            MarkTypesAbstract(compileUnit);
+        }
 
+        #endregion IServiceContractGenerationExtension implementation
+
+        #region IXsdImportExtension
+
+        void IXsdImportExtension.BeforeImport(XmlSchemaSet xmlSchemaSet)
+        {
+        }
+
+        /// <summary>Called when importing a contract.</summary>
+        /// <param name="importer">The importer.</param>
+        void IXsdImportExtension.ImportContract(XsdDataContractImporter importer)
+        {
+            _xsdDataContractImporter = importer;
+        }
+
+        #endregion IXsdImportExtension
+
+        #region IDataContractGenerationExtension
+
+        void IDataContractGenerationExtension.GenerateContract(CodeCompileUnit compileUnit)
+        {
+            MarkTypesAbstract(compileUnit);
+        }
+
+        #endregion IDataContractGenerationExtension
+
+        private void UnsetIsAbstractFlagOnGlobalComplexType(XmlSchemaSet xmlSchemaSet)
+        {
+            foreach (DictionaryEntry globalTypeEntry in xmlSchemaSet.GlobalTypes)
+            {
+                var globalType = globalTypeEntry.Value;
+
+                var complexType = globalType as XmlSchemaComplexType;
+                if (complexType == null || complexType.Name == null)
+                    continue;
+
+                if (complexType.IsAbstract)
+                    complexType.IsAbstract = false;
+            }
+        }
+
+        private void MarkTypesAbstract(CodeCompileUnit compileUnit)
+        {
             foreach (var complexType in _serviceModel.ComplexTypes)
             {
                 if (!complexType.IsAbstract)
@@ -105,12 +141,10 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
 
                 var typeDeclaration = typeName.Find(compileUnit);
                 if (typeDeclaration == null)
-                    throw new Exception(string.Format("Declaration for type '{0}' not found in compile unit.", typeName));
+                    throw new Exception($"Declaration for type '{typeName}' not found in compile unit.");
 
                 typeDeclaration.TypeAttributes |= TypeAttributes.Abstract;
             }
         }
-
-        #endregion IServiceContractGenerationExtension implementation
     }
 }

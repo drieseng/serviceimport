@@ -87,7 +87,7 @@ namespace BRail.Nis.ServiceImport.Framework.CodeDom
         public static bool IsPascalCase(this string text)
         {
             if (text.Length == 0)
-                throw new ArgumentException("Cannot be a zero-length string.", "text");
+                throw new ArgumentException("Cannot be a zero-length string.", nameof(text));
 
             if (text.Length == 1)
                 return char.IsLower(text[0]);

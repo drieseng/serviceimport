@@ -2,7 +2,9 @@
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.ServiceModel.Description;
+using System.Xml.Schema;
 using BRail.Nis.ServiceImport.Framework.CodeDom;
 
 namespace BRail.Nis.ServiceImport.Framework.Extension
@@ -11,21 +13,44 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
     /// Supports changing the access modifier of generated type declarations.
     /// </summary>
     /// <remarks>
-    /// This is not a WCF extension because the client class of not yet available when <see cref="IServiceContractGenerationExtension.GenerateContract(ServiceContractGenerationContext)"/>
+    /// This is not a WCF extension because the client class is not yet available when <see cref="IServiceContractGenerationExtension.GenerateContract(ServiceContractGenerationContext)"/>
     /// is invoked.
     /// </remarks>
-    public class TypeAccessModifierExtension
+    public class TypeAccessModifierExtension : IXsdImportExtension
     {
-        public void Apply(IDictionary<string, TypeAccessModifier> typeAccessModifiers, CodeCompileUnit codeCompileUnit)
+        private readonly IDictionary<string, TypeAccessModifier> _typeAccessModifiers;
+
+        public TypeAccessModifierExtension(IDictionary<string, TypeAccessModifier> typeAccessModifiers)
         {
-            foreach (var typeAccessModifierEntry in typeAccessModifiers)
+            if (typeAccessModifiers == null)
+                throw new ArgumentNullException(nameof(typeAccessModifiers));
+
+            _typeAccessModifiers = typeAccessModifiers;
+        }
+
+        #region IXsdImportExtension implementation
+
+        void IXsdImportExtension.BeforeImport(XmlSchemaSet xmlSchemas)
+        {
+        }
+
+        void IXsdImportExtension.ImportContract(XsdDataContractImporter importer)
+        {
+        }
+
+        void IDataContractGenerationExtension.GenerateContract(CodeCompileUnit compileUnit)
+        {
+            if (compileUnit == null)
+                throw new ArgumentNullException(nameof(compileUnit));
+
+            foreach (var typeAccessModifierEntry in _typeAccessModifiers)
             {
                 var typeName = typeAccessModifierEntry.Key;
                 var accessModifier = typeAccessModifierEntry.Value;
 
-                var typeDeclaration = codeCompileUnit.FindTypeDeclaration(typeName);
+                var typeDeclaration = compileUnit.FindTypeDeclaration(typeName);
                 if (typeDeclaration == null)
-                    throw new Exception(string.Format("Type '{0}' does not exist.", typeName));
+                    throw new Exception($"Type '{typeName}' does not exist.");
 
                 switch (accessModifier)
                 {
@@ -38,10 +63,11 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
                         typeDeclaration.TypeAttributes &= TypeAttributes.NotPublic;
                         break;
                     default:
-                        throw new Exception(string.Format("Access modifier '{0}' is not supported.", accessModifier));
+                        throw new Exception($"Access modifier '{accessModifier}' is not supported.");
                 }
             }
         }
 
+        #endregion IXsdImportExtension implementation
     }
 }

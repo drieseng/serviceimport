@@ -1,4 +1,9 @@
-﻿using BRail.Nis.ServiceImport.Framework;
+﻿using System.CodeDom;
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Xml.Schema;
+using BRail.Nis.ServiceImport.Framework;
+using BRail.Nis.ServiceImport.Framework.CodeDom;
 using BRail.Nis.ServiceImport.Framework.Writer;
 
 namespace ServiceImport.Console
@@ -7,16 +12,65 @@ namespace ServiceImport.Console
     {
         public static void Main(string[] args)
         {
-            var options = new OptionsFactory().Create(args);
-            var codeGeneratorOptions = new CodeGeneratorOptionsFactory().Create();
-            var codeWriter = new FileSystemCodeWriter(codeGeneratorOptions, options.OutputDirectory);
-            var serviceImporter = new ServiceImporter(options.Wsdl,
-                                                      options.XmlTypeMappings,
-                                                      options.NamespaceMappings,
-                                                      options.TypeAccessModifierMappings,
-                                                      options.TypeRenameMappings);
 
-            serviceImporter.Import(codeWriter);
+            var codeGeneratorOptions = CreateCodeGeneratorOptions();
+            var xmlTypeMappings = CreateXmlTypeMappings();
+            var namespaceMappings = CreateNamespaceMappings();
+            var typeAccessModifierMappings = CreateTypeAccessModifierMappings();
+            var typeRenameMappings = CreateTypeRenameMappings();
+            var codeWriter = new FileSystemCodeWriter(codeGeneratorOptions, "c:\\temp");
+            var xsdImporter = new XsdImporter(@"C:\TFS2010\A204-NIS\Contracts\A1403\Current\src\Schemas\content\Contracts\A1403\ProductionPoints_v1.xsd", xmlTypeMappings, namespaceMappings, typeAccessModifierMappings, typeRenameMappings);
+
+            xsdImporter.Import(codeWriter);
+
+            //var options = new OptionsFactory().Create(args);
+            //var codeGeneratorOptions = new CodeGeneratorOptionsFactory().Create();
+            //var codeWriter = new FileSystemCodeWriter(codeGeneratorOptions, options.OutputDirectory);
+            //var serviceImporter = new ServiceImporter(options.Wsdl,
+            //                                          options.XmlTypeMappings,
+            //                                          options.NamespaceMappings,
+            //                                          options.TypeAccessModifierMappings,
+            //                                          options.TypeRenameMappings);
+
+            //serviceImporter.Import(codeWriter);
+        }
+
+        private static CodeGeneratorOptions CreateCodeGeneratorOptions()
+        {
+            var codeGeneratorOptions = new CodeGeneratorOptions
+            {
+                BracingStyle = "C",
+                BlankLinesBetweenMembers = true,
+                ElseOnClosing = false
+            };
+            return codeGeneratorOptions;
+        }
+
+        private static IDictionary<string, string> CreateNamespaceMappings()
+        {
+            return new Dictionary<string, string>
+            {
+                { "http://www.infrabel.be/A1403/ProductionPoints/V1", "BRail.A1403.ContractEntities.ProductionPoints.V1" }
+            };
+        }
+
+        private static IDictionary<XmlTypeCode, CodeTypeReference> CreateXmlTypeMappings()
+        {
+            return new Dictionary<XmlTypeCode, CodeTypeReference>
+            {
+                { XmlTypeCode.Date, new CodeTypeReference("BRail.Nis.GeneralLib.ContractEntities.Date") }
+            };
+        }
+
+        private static IDictionary<string, TypeAccessModifier> CreateTypeAccessModifierMappings()
+        {
+            return new Dictionary<string, TypeAccessModifier>();
+        }
+
+        private static IDictionary<string, string> CreateTypeRenameMappings()
+        {
+            var typeRenameMappings = new Dictionary<string, string>();
+            return typeRenameMappings;
         }
     }
 }

@@ -45,8 +45,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CodeDom\TypeAccessModifier.cs" />
+    <Compile Include="Extension\IDataContractGenerationExtension.cs" />
     <Compile Include="Extension\TypeAccessModifierExtension.cs" />
     <Compile Include="Extension\TypeRenameExtension.cs" />
+    <Compile Include="Extension\IXsdImportExtension.cs" />
     <Compile Include="Helper\EnumerableExtensions.cs" />
     <Compile Include="Extension\AbstractTypeExtension.cs" />
     <Compile Include="CodeDom\CodeDomExtensions.cs" />
@@ -54,6 +56,7 @@
     <Compile Include="Extension\ComplexTypeElementTypeMappingExtension.cs" />
     <Compile Include="Extension\ComplexTypeOptionalElementsNillableExtension.cs" />
     <Compile Include="Extension\OperationContractReplyActionRemovalExtension.cs" />
+    <Compile Include="Helper\XmlSchemaExtensions.cs" />
     <Compile Include="Writer\FileSystemCodeWriter.cs" />
     <Compile Include="Writer\ICodeWriter.cs" />
     <Compile Include="Factory\IWsdlImporterFactory.cs" />
@@ -75,7 +78,9 @@
     <Compile Include="Helper\WsdlImporterExtensions.cs" />
     <Compile Include="Factory\WsdlImporterFactory.cs" />
     <Compile Include="Factory\XsdDataContractImporterFactory.cs" />
+    <Compile Include="XsdImporter.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

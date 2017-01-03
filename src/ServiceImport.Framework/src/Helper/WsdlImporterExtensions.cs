@@ -65,19 +65,38 @@ namespace BRail.Nis.ServiceImport.Framework.Helper
             if (contentTypeParticle != null)
             {
                 var schemaSequence = contentTypeParticle as XmlSchemaSequence;
-                if (schemaSequence == null)
-                    throw new ArgumentException(string.Format("Complex type '{0}' does not define a sequence.", complexType.QualifiedName));
-
-                foreach (var item in schemaSequence.Items)
+                if (schemaSequence != null)
                 {
-                    var elementItem = item as XmlSchemaElement;
-                    if (elementItem == null)
-                        throw new ArgumentException(string.Format("The sequence of complex type '{0}' should only contain elements.", complexType.QualifiedName));
+                    foreach (var item in schemaSequence.Items)
+                    {
+                        var elementItem = item as XmlSchemaElement;
+                        if (elementItem == null)
+                            throw new ArgumentException($"The sequence of complex type '{complexType.QualifiedName}' should only contain elements.");
 
-                    yield return elementItem;
+                        yield return elementItem;
+                    }
+
+                    yield break;
                 }
+            }
 
-                yield break;
+            var particle = complexType.Particle;
+            if (particle != null)
+            {
+                var schemaSequence = particle as XmlSchemaSequence;
+                if (schemaSequence != null)
+                {
+                    foreach (var item in schemaSequence.Items)
+                    {
+                        var elementItem = item as XmlSchemaElement;
+                        if (elementItem == null)
+                            throw new ArgumentException($"The sequence of complex type '{complexType.QualifiedName}' should only contain elements.");
+
+                        yield return elementItem;
+                    }
+
+                    yield break;
+                }
             }
 
             throw new ArgumentException(string.Format("Complex type '{0}' does not define a particle.", complexType.QualifiedName));

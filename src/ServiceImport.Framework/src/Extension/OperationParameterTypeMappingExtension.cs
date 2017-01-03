@@ -19,12 +19,10 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
     {
         private ServiceDescriptionCollection _wsdlDocuments;
         private readonly IDictionary<XmlTypeCode, CodeTypeReference> _xmlTypeMapping;
-//        private IDictionary<XmlQualifiedName, OperationMessageInfo> _operationMessageRegister;
 
-        public OperationParameterTypeMappingExtension(IDictionary<XmlTypeCode, CodeTypeReference> xmlTypeMapping) //, IDictionary<XmlQualifiedName, OperationMessageInfo> operationMessageRegister)
+        public OperationParameterTypeMappingExtension(IDictionary<XmlTypeCode, CodeTypeReference> xmlTypeMapping)
         {
             _xmlTypeMapping = xmlTypeMapping;
-//            _operationMessageRegister = operationMessageRegister;
         }
 
         #region IWsdlImportExtension implementation
@@ -86,8 +84,6 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
                 if (operationMessage == null)
                     break;
 
-//                var operationMessageInfo = _operationMessageRegister[operationMessage.Message];
-
                 var wsdlMessage = FindWsdlMessage(portType.ServiceDescription.Messages, operationMessage.Message.Name);
                 var wrapperElement = FindSchemaElementByQualifiedName(portType.ServiceDescription.Types.Schemas, wsdlMessage.Parts[0].Element);
                 var parameterRegister = CreateParameterRegister(wrapperElement);
@@ -110,8 +106,6 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
                         if (methodParameter == null)
                             throw new Exception();
 
-                        //var operationParameterInfo = operationMessageInfo.Parameters[part.Name];
-                        //if (operationParameterInfo.MinOccurs == 0)
                         if (parameterElement.MinOccurs == 0)
                         {
                             methodParameter.Type = typeReference.ToNullable();

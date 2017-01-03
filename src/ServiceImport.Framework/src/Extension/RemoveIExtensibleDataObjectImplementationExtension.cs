@@ -1,17 +1,17 @@
 ﻿using System.CodeDom;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
 using System.ServiceModel.Dispatcher;
 using System.Web.Services.Description;
 using System.Xml;
 using System.Xml.Schema;
-using System.Runtime.Serialization;
 using BRail.Nis.ServiceImport.Framework.CodeDom;
 
 namespace BRail.Nis.ServiceImport.Framework.Extension
 {
-    public class RemoveIExtensibleDataObjectImplementationExtension : IServiceContractGenerationExtension, IWsdlImportExtension, IContractBehavior
+    public class RemoveIExtensibleDataObjectImplementationExtension : IServiceContractGenerationExtension, IWsdlImportExtension, IContractBehavior, IXsdImportExtension
     {
         #region IWsdlImportExtension implementation
 
@@ -50,17 +50,36 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
 
         #endregion IContractBehavior implementation
 
-        #region IServiceContractGenerationExtension implementation
+        #region  implementation
 
-        public void GenerateContract(ServiceContractGenerationContext context)
+        void IServiceContractGenerationExtension.GenerateContract(ServiceContractGenerationContext context)
         {
             // use the compile unit of the ServiceContractGenerator to have types defined
             // in XSDs and WSDLs
             var compileUnit = context.ServiceContractGenerator.TargetCompileUnit;
-
             foreach (var typeDeclaration in compileUnit.Types())
                 RemoveIExtensibleDataObjectImplementation(typeDeclaration);
         }
+
+        #endregion IServiceContractGenerationExtension implementation
+
+        #region IXsdImportExtension implementation
+
+        void IXsdImportExtension.BeforeImport(XmlSchemaSet xmlSchemas)
+        {
+        }
+
+        void IXsdImportExtension.ImportContract(XsdDataContractImporter importer)
+        {
+        }
+
+        void IDataContractGenerationExtension.GenerateContract(CodeCompileUnit compileUnit)
+        {
+            foreach (var typeDeclaration in compileUnit.Types())
+                RemoveIExtensibleDataObjectImplementation(typeDeclaration);
+        }
+
+        #endregion IXsdImportExtension implementation
 
         private static void RemoveIExtensibleDataObjectImplementation(CodeTypeDeclaration typeDeclaration)
         {
@@ -108,7 +127,5 @@ namespace BRail.Nis.ServiceImport.Framework.Extension
                     RemoveIExtensibleDataObjectImplementation(type);
             }
         }
-
-        #endregion IServiceContractGenerationExtension implementation
     }
 }
