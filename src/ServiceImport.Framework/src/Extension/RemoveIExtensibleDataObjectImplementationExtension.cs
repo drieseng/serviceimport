@@ -7,9 +7,9 @@ using System.ServiceModel.Dispatcher;
 using System.Web.Services.Description;
 using System.Xml;
 using System.Xml.Schema;
-using BRail.Nis.ServiceImport.Framework.CodeDom;
+using ServiceImport.Framework.CodeDom;
 
-namespace BRail.Nis.ServiceImport.Framework.Extension
+namespace ServiceImport.Framework.Extension
 {
     public class RemoveIExtensibleDataObjectImplementationExtension : IServiceContractGenerationExtension, IWsdlImportExtension, IContractBehavior, IXsdImportExtension
     {

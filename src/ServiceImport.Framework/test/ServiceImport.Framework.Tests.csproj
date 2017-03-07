@@ -7,8 +7,8 @@
     <ProjectGuid>{FAFD8283-F453-40A0-81EA-1617ACA8E262}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BRail.Nis.ServiceImport.Framework.Tests</RootNamespace>
-    <AssemblyName>BRail.Nis.ServiceImport.Framework.Tests</AssemblyName>
+    <RootNamespace>ServiceImport.Framework.Tests</RootNamespace>
+    <AssemblyName>ServiceImport.Framework.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -37,6 +37,9 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\VersionInfo.generated.cs">
+      <Link>Properties\VersionInfo.generated.cs</Link>
+    </Compile>
     <Compile Include="Extension\PascalCaseFieldNamesExtensionTests.cs" />
     <Compile Include="Extension\TypeRenameExtensionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

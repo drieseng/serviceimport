@@ -1,5 +1,4 @@
-﻿using BRail.Nis.ServiceImport.Framework.CodeDom;
-using System.CodeDom;
+﻿using System.CodeDom;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.ServiceModel.Channels;
@@ -8,8 +7,9 @@ using System.ServiceModel.Dispatcher;
 using System.Web.Services.Description;
 using System.Xml;
 using System.Xml.Schema;
+using ServiceImport.Framework.CodeDom;
 
-namespace BRail.Nis.ServiceImport.Framework.Extension
+namespace ServiceImport.Framework.Extension
 {
     public class PascalCaseFieldNamesExtension : IWsdlImportExtension, IContractBehavior, IServiceContractGenerationExtension, IXsdImportExtension
     {

@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel.Description;
 using System.Xml.Schema;
 
-namespace BRail.Nis.ServiceImport.Framework.Factory
+namespace ServiceImport.Framework.Factory
 {
     public interface IWsdlImporterFactory
     {

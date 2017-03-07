@@ -5,9 +5,9 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.ServiceModel.Description;
 using System.Xml.Schema;
-using BRail.Nis.ServiceImport.Framework.CodeDom;
+using ServiceImport.Framework.CodeDom;
 
-namespace BRail.Nis.ServiceImport.Framework.Extension
+namespace ServiceImport.Framework.Extension
 {
     /// <summary>
     /// Supports changing the access modifier of generated type declarations.

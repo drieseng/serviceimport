@@ -7,8 +7,8 @@
     <ProjectGuid>{FA02E3EF-49F8-4418-B660-A3C0A730F0C7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BRail.Nis.ServiceImport.Framework</RootNamespace>
-    <AssemblyName>BRail.Nis.ServiceImport.Framework</AssemblyName>
+    <RootNamespace>ServiceImport.Framework</RootNamespace>
+    <AssemblyName>ServiceImport.Framework</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\ServiceImport.Framework.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -30,6 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\ServiceImport.Framework.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -44,6 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\VersionInfo.generated.cs">
+      <Link>Properties\VersionInfo.generated.cs</Link>
+    </Compile>
     <Compile Include="CodeDom\TypeAccessModifier.cs" />
     <Compile Include="Extension\IDataContractGenerationExtension.cs" />
     <Compile Include="Extension\TypeAccessModifierExtension.cs" />

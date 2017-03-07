@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace BRail.Nis.ServiceImport.Framework.Tests.Extension
+namespace ServiceImport.Framework.Tests.Extension
 {
     [TestFixture]
     public class PascalCaseFieldNamesExtensionTests

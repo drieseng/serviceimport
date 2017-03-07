@@ -1,19 +1,19 @@
 ﻿using System;
 using System.CodeDom;
+using System.Collections;
 using System.Collections.Generic;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
 using System.ServiceModel.Dispatcher;
 using System.Web.Services.Description;
+using System.Xml;
+using System.Xml.Schema;
+using ServiceImport.Framework.CodeDom;
+using ServiceImport.Framework.Helper;
 using SWSServiceDescription = System.Web.Services.Description.ServiceDescription;
 using SWSMessage = System.Web.Services.Description.Message;
-using System.Xml.Schema;
-using System.Collections;
-using System.Xml;
-using BRail.Nis.ServiceImport.Framework.CodeDom;
-using BRail.Nis.ServiceImport.Framework.Helper;
 
-namespace BRail.Nis.ServiceImport.Framework.Extension
+namespace ServiceImport.Framework.Extension
 {
     public class OperationParameterTypeMappingExtension : IOperationContractGenerationExtension, IOperationBehavior, IWsdlImportExtension
     {

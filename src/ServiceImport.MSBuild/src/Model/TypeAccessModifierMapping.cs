@@ -1,6 +1,6 @@
-﻿using BRail.Nis.ServiceImport.Framework.CodeDom;
+﻿using ServiceImport.Framework.CodeDom;
 
-namespace BRail.Nis.ServiceImport.MSBuild.Tasks.Model
+namespace ServiceImport.MSBuild.Model
 {
     internal class TypeAccessModifierMapping
     {

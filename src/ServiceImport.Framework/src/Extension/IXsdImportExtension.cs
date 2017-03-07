@@ -1,7 +1,7 @@
 ﻿using System.Runtime.Serialization;
 using System.Xml.Schema;
 
-namespace BRail.Nis.ServiceImport.Framework.Extension
+namespace ServiceImport.Framework.Extension
 {
     public interface IXsdImportExtension : IDataContractGenerationExtension
     {

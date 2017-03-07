@@ -33,6 +33,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\..\VersionInfo.generated.cs">
+      <Link>Properties\VersionInfo.generated.cs</Link>
+    </Compile>
     <Compile Include="CodeGeneratorOptionsFactory.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="OptionsFactory.cs" />

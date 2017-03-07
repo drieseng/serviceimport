@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceImport.Console", "src\ServiceImport.Console\src\ServiceImport.Console.csproj", "{EFE51777-7D9A-48A7-8F1E-5116452D5668}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceImport.Framework", "src\ServiceImport.Framework\src\ServiceImport.Framework.csproj", "{FA02E3EF-49F8-4418-B660-A3C0A730F0C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceImport.MSBuild.Tasks", "src\ServiceImport.MSBuild.Tasks\src\ServiceImport.MSBuild.Tasks.csproj", "{AFA5D88B-90F2-4691-A0FF-988582DF2B24}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceImport.MSBuild", "src\ServiceImport.MSBuild\src\ServiceImport.MSBuild.csproj", "{AFA5D88B-90F2-4691-A0FF-988582DF2B24}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceImport.Framework.Tests", "src\ServiceImport.Framework\test\ServiceImport.Framework.Tests.csproj", "{FAFD8283-F453-40A0-81EA-1617ACA8E262}"
 EndProject

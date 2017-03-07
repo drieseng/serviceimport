@@ -1,9 +1,5 @@
-﻿using BRail.Nis.ServiceImport.Framework.CodeDom;
-using BRail.Nis.ServiceImport.Framework.Helper;
-using BRail.Nis.ServiceImport.Framework.Model;
-using System;
+﻿using System;
 using System.CodeDom;
-using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.ServiceModel.Channels;
@@ -12,8 +8,11 @@ using System.ServiceModel.Dispatcher;
 using System.Web.Services.Description;
 using System.Xml;
 using System.Xml.Schema;
+using ServiceImport.Framework.CodeDom;
+using ServiceImport.Framework.Helper;
+using ServiceImport.Framework.Model;
 
-namespace BRail.Nis.ServiceImport.Framework.Extension
+namespace ServiceImport.Framework.Extension
 {
     /// <summary>
     /// Marks elements of complex type as nillable before the import.

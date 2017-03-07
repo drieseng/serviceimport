@@ -1,19 +1,17 @@
-﻿using System;
-using System.CodeDom;
+﻿using System.CodeDom;
 using System.CodeDom.Compiler;
-using System.Collections;
 using System.Collections.Generic;
 using System.ServiceModel.Description;
 using System.Xml.Schema;
-using BRail.Nis.ServiceImport.Framework.CodeDom;
-using BRail.Nis.ServiceImport.Framework.Extension;
-using BRail.Nis.ServiceImport.Framework.Factory;
-using BRail.Nis.ServiceImport.Framework.Helper;
-using BRail.Nis.ServiceImport.Framework.Model;
-using BRail.Nis.ServiceImport.Framework.Writer;
 using Microsoft.CSharp;
+using ServiceImport.Framework.CodeDom;
+using ServiceImport.Framework.Extension;
+using ServiceImport.Framework.Factory;
+using ServiceImport.Framework.Helper;
+using ServiceImport.Framework.Model;
+using ServiceImport.Framework.Writer;
 
-namespace BRail.Nis.ServiceImport.Framework
+namespace ServiceImport.Framework
 {
     public class XsdImporter
     {

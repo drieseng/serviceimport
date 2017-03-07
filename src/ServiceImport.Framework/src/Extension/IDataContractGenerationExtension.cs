@@ -1,6 +1,6 @@
 ﻿using System.CodeDom;
 
-namespace BRail.Nis.ServiceImport.Framework.Extension
+namespace ServiceImport.Framework.Extension
 {
     public interface IDataContractGenerationExtension
     {

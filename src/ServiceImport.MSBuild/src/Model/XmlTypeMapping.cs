@@ -1,7 +1,7 @@
 ﻿using System.CodeDom;
 using System.Xml.Schema;
 
-namespace BRail.Nis.ServiceImport.MSBuild.Tasks.Model
+namespace ServiceImport.MSBuild.Model
 {
     internal class XmlTypeMapping
     {

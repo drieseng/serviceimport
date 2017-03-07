@@ -6,7 +6,7 @@ using System.Xml;
 using System.Xml.Schema;
 using SWSServiceDecription = System.Web.Services.Description.ServiceDescription;
 
-namespace BRail.Nis.ServiceImport.Framework.Helper
+namespace ServiceImport.Framework.Helper
 {
     internal static class WsdlImporterExtensions
     {

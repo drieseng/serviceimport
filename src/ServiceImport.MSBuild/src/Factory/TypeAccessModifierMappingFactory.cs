@@ -1,9 +1,9 @@
 ﻿using System;
-using BRail.Nis.ServiceImport.Framework.CodeDom;
-using BRail.Nis.ServiceImport.MSBuild.Tasks.Model;
 using Microsoft.Build.Framework;
+using ServiceImport.Framework.CodeDom;
+using ServiceImport.MSBuild.Model;
 
-namespace BRail.Nis.ServiceImport.MSBuild.Tasks.Factory
+namespace ServiceImport.MSBuild.Factory
 {
     internal class TypeAccessModifierMappingFactory
     {

@@ -2,7 +2,7 @@
 using System.CodeDom.Compiler;
 using Microsoft.Build.Framework;
 
-namespace BRail.Nis.ServiceImport.MSBuild.Tasks.Factory
+namespace ServiceImport.MSBuild.Factory
 {
     internal class CodeGeneratorOptionsFactory
     {

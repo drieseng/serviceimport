@@ -1,9 +1,9 @@
-﻿using BRail.Nis.ServiceImport.Framework.CodeDom;
-using System.CodeDom;
+﻿using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.IO;
+using ServiceImport.Framework.CodeDom;
 
-namespace BRail.Nis.ServiceImport.Framework.Writer
+namespace ServiceImport.Framework.Writer
 {
     public class FileSystemCodeWriter : ICodeWriter
     {

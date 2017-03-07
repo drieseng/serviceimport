@@ -1,7 +1,7 @@
 ﻿using System.CodeDom;
 using System.CodeDom.Compiler;
 
-namespace BRail.Nis.ServiceImport.Framework.Writer
+namespace ServiceImport.Framework.Writer
 {
     public interface ICodeWriter
     {

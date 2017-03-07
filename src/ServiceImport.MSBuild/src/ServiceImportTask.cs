@@ -1,14 +1,14 @@
-﻿using BRail.Nis.ServiceImport.Framework;
-using BRail.Nis.ServiceImport.Framework.CodeDom;
-using BRail.Nis.ServiceImport.Framework.Writer;
-using BRail.Nis.ServiceImport.MSBuild.Tasks.Factory;
-using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
-using System.CodeDom;
+﻿using System.CodeDom;
 using System.Collections.Generic;
 using System.Xml.Schema;
+using Microsoft.Build.Framework;
+using Microsoft.Build.Utilities;
+using ServiceImport.Framework;
+using ServiceImport.Framework.CodeDom;
+using ServiceImport.Framework.Writer;
+using ServiceImport.MSBuild.Factory;
 
-namespace BRail.Nis.ServiceImport.MSBuild.Tasks
+namespace ServiceImport.MSBuild
 {
     public class ServiceImportTask : Task
     {

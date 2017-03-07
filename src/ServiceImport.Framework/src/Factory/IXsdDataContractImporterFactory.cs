@@ -3,7 +3,7 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace BRail.Nis.ServiceImport.Framework.Factory
+namespace ServiceImport.Framework.Factory
 {
     public interface IXsdDataContractImporterFactory
     {

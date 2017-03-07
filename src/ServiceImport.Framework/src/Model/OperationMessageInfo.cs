@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
 
-namespace BRail.Nis.ServiceImport.Framework.Model
+namespace ServiceImport.Framework.Model
 {
     public class OperationMessageInfo
     {

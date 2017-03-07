@@ -1,7 +1,7 @@
 ﻿using System;
 using System.CodeDom;
 
-namespace BRail.Nis.ServiceImport.Framework.CodeDom
+namespace ServiceImport.Framework.CodeDom
 {
     internal class CodeTypeName
     {

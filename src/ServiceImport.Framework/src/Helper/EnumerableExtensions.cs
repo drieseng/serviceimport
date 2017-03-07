@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace BRail.Nis.ServiceImport.Framework.Helper
+namespace ServiceImport.Framework.Helper
 {
     public static class EnumerableExtensions
     {

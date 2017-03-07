@@ -1,5 +1,4 @@
-﻿using BRail.Nis.ServiceImport.Framework.Helper;
-using System.CodeDom;
+﻿using System.CodeDom;
 using System.Collections.Generic;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
@@ -8,8 +7,9 @@ using System.ServiceModel.Dispatcher;
 using System.Web.Services.Description;
 using System.Xml;
 using System.Xml.Schema;
+using ServiceImport.Framework.Helper;
 
-namespace BRail.Nis.ServiceImport.Framework.Extension
+namespace ServiceImport.Framework.Extension
 {
     /// <summary>
     /// Removes the <see cref="OperationContractAttribute.ReplyAction"/> argument from the <see cref="OperationContractAttribute"/>

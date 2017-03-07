@@ -1,10 +1,10 @@
 ﻿using System;
 using System.CodeDom;
 using System.Xml.Schema;
-using BRail.Nis.ServiceImport.MSBuild.Tasks.Model;
 using Microsoft.Build.Framework;
+using ServiceImport.MSBuild.Model;
 
-namespace BRail.Nis.ServiceImport.MSBuild.Tasks.Factory
+namespace ServiceImport.MSBuild.Factory
 {
     internal class XmlTypeMappingFactory
     {

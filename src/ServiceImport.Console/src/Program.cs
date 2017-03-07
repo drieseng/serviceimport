@@ -2,9 +2,9 @@
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Xml.Schema;
-using BRail.Nis.ServiceImport.Framework;
-using BRail.Nis.ServiceImport.Framework.CodeDom;
-using BRail.Nis.ServiceImport.Framework.Writer;
+using ServiceImport.Framework;
+using ServiceImport.Framework.CodeDom;
+using ServiceImport.Framework.Writer;
 
 namespace ServiceImport.Console
 {

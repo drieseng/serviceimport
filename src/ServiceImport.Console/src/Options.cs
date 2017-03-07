@@ -1,7 +1,7 @@
 ﻿using System.CodeDom;
 using System.Collections.Generic;
 using System.Xml.Schema;
-using BRail.Nis.ServiceImport.Framework.CodeDom;
+using ServiceImport.Framework.CodeDom;
 
 namespace ServiceImport.Console
 {

@@ -2,11 +2,11 @@
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
-using BRail.Nis.ServiceImport.Framework.CodeDom;
-using BRail.Nis.ServiceImport.Framework.Extension;
 using NUnit.Framework;
+using ServiceImport.Framework.CodeDom;
+using ServiceImport.Framework.Extension;
 
-namespace BRail.Nis.ServiceImport.Framework.Tests.Extension
+namespace ServiceImport.Framework.Tests.Extension
 {
     [TestFixture]
     public class TypeRenameExtensionTests

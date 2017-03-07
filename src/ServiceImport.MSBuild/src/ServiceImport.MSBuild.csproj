@@ -7,8 +7,8 @@
     <ProjectGuid>{AFA5D88B-90F2-4691-A0FF-988582DF2B24}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BRail.Nis.ServiceImport.MSBuild.Tasks</RootNamespace>
-    <AssemblyName>BRail.Nis.ServiceImport.MSBuild.Tasks</AssemblyName>
+    <RootNamespace>ServiceImport.MSBuild</RootNamespace>
+    <AssemblyName>ServiceImport.MSBuild</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\ServiceImport.MSBuild.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -28,8 +29,12 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\ServiceImport.MSBuild.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\..\VersionInfo.generated.cs">
+      <Link>Properties\VersionInfo.generated.cs</Link>
+    </Compile>
     <Compile Include="Factory\CodeGeneratorOptionsFactory.cs" />
     <Compile Include="Factory\NamespaceMappingFactory.cs" />
     <Compile Include="Factory\TypeAccessModifierMappingFactory.cs" />

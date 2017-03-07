@@ -1,4 +1,4 @@
-﻿namespace BRail.Nis.ServiceImport.Framework.CodeDom
+﻿namespace ServiceImport.Framework.CodeDom
 {
     public enum TypeAccessModifier
     {

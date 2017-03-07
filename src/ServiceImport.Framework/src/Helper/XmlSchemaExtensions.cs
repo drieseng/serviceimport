@@ -2,9 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Schema;
-using BRail.Nis.ServiceImport.Framework.Model;
 
-namespace BRail.Nis.ServiceImport.Framework.Helper
+namespace ServiceImport.Framework.Helper
 {
     internal static class XmlSchemaExtensions
     {

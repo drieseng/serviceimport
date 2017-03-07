@@ -1,4 +1,4 @@
-﻿namespace BRail.Nis.ServiceImport.MSBuild.Tasks.Model
+﻿namespace ServiceImport.MSBuild.Model
 {
     internal class TypeRenameMapping
     {

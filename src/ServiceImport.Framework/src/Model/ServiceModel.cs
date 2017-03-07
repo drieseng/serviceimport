@@ -2,7 +2,7 @@
 using System.Xml;
 using System.Xml.Schema;
 
-namespace BRail.Nis.ServiceImport.Framework.Model
+namespace ServiceImport.Framework.Model
 {
     public class ServiceModel
     {

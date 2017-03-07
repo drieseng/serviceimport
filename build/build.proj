@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Clean;Build;PublishNuGetPackages" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration>Release</Configuration>
+    <SolutionDir>$(MSBuildProjectDirectory)\..</SolutionDir>
+    <BuildTempDirectory>$(MSBuildProjectDirectory)\target</BuildTempDirectory>
+  </PropertyGroup>
+  <!-- Build all projects, and create deployment artifacts -->
+  <Target Name="Build" DependsOnTargets="BuildSolution"/>
+  <Target Name="Clean">
+    <RemoveDir Directories="$(BuildTempDirectory)"/>
+    <ItemGroup>
+      <ProjectToClean Include="$(SolutionDir)\ServiceImport.sln">
+        <Properties>Configuration=$(Configuration)</Properties>
+      </ProjectToClean>
+    </ItemGroup>
+    <MSBuild Projects="@(ProjectToClean)" Targets="Clean"/>
+  </Target>
+  <Target Name="BuildSolution" DependsOnTargets="CheckInformationalVersion;CreateVersionInfo">
+    <ItemGroup>
+      <ProjectToBuild Remove="@(ProjectToBuild)"/>
+      <ProjectToBuild Include="$(SolutionDir)\ServiceImport.sln">
+        <Properties>Configuration=$(Configuration);WarningLevel=0;InformationalVersion=$(InformationalVersion)</Properties>
+      </ProjectToBuild>
+    </ItemGroup>
+    <MSBuild Projects="@(ProjectToBuild)" Targets="Rebuild"/>
+  </Target>
+  <Target Name="CreateNuGetPackages" DependsOnTargets="CheckInformationalVersion;DownloadNuGet">
+    <Exec Command="$(NuGetTool) pack -IncludeReferencedProjects -Properties Configuration=$(Configuration) -OutputDirectory $(BuildTempDirectory) -Verbosity quiet -Version &quot;$(InformationalVersion)&quot; -NonInteractive" WorkingDirectory="$(SolutionDir)\src\ServiceImport.MSBuild\src" />
+  </Target>
+  <Target Name="PublishNuGetPackages" DependsOnTargets="CheckInformationalVersion;CreateNuGetPackages;CheckNuGetApiKey">
+    <ItemGroup>
+      <NuGetPackages Remove="@(NuGetPackages)"/>
+      <NuGetPackages Include="$(BuildTempDirectory)\ServiceImport.MSBuild.$(InformationalVersion).nupkg"/>
+    </ItemGroup>
+    <Exec Command="$(NuGetTool) push &quot;%(NuGetPackages.Identity)&quot; -ApiKey &quot;$(NuGetApiKey)&quot; -Source https://www.nuget.org/api/v2/package -Verbosity quiet -NonInteractive"/>
+  </Target>
+  <!--
+    Create VersionInfo.generated.cs file with version and new Build changeset
+  -->
+  <Target Name="CreateVersionInfo" DependsOnTargets="CheckInformationalVersion">
+    <ItemGroup>
+      <VersionInfoLines Remove="@(VersionInfoLines)"/>
+      <VersionInfoLines Include="using System.Reflection%3B"/>
+      <VersionInfoLines Include=" "/>
+      <VersionInfoLines Include="[assembly: AssemblyVersion(&quot;$(InformationalVersion)&quot;)]"/>
+      <VersionInfoLines Include="[assembly: AssemblyFileVersion(&quot;$(InformationalVersion)&quot;)]"/>
+      <VersionInfoLines Include="[assembly: AssemblyInformationalVersion(&quot;$(InformationalVersion)&quot;)]"/>
+    </ItemGroup>
+    <WriteLinesToFile File="$(SolutionDir)\src\VersionInfo.generated.cs" Encoding="UTF-8" Overwrite="true" Lines="@(VersionInfoLines)"/>
+  </Target>
+  <Target Name="CheckInformationalVersion">
+    <!-- Fail the build if the informational version has not been set -->
+    <Error Text="Please specify the informational version." Condition="'$(InformationalVersion)'==''"/>
+  </Target>
+  <Target Name="CheckBuildTempDirectory">
+    <Error Condition="'$(BuildTempDirectory)'==''" Text="The 'BuildTempDirectory' is not configured."/>
+  </Target>
+  <Target Name="CheckNuGetApiKey">
+    <Error Condition="'$(NuGetApiKey)'==''" Text="The 'NuGetApiKey' is not configured."/>
+  </Target>
+  <Target Name="DefineNuGetTool" DependsOnTargets="CheckBuildTempDirectory">
+    <PropertyGroup>
+      <NuGetTool>$(BuildTempDirectory)\nuget\nuget.exe</NuGetTool>
+    </PropertyGroup>
+  </Target>
+  <!--
+    Download the NuGet command line tool if not already available in the target directory.
+  -->
+  <Target Name="DownloadNuGet" DependsOnTargets="DefineNuGetTool" Condition="!Exists('$(NuGetTool)')">
+    <PropertyGroup>
+      <NuGetToolDir>$([System.IO.Path]::GetDirectoryName($(NuGetTool)))</NuGetToolDir>
+    </PropertyGroup>
+    <MakeDir Directories="$(NuGetToolDir)"/>
+    <!-- for now, use a recent beta version (https://github.com/NuGet/Home/issues/3144) -->
+    <DownloadFile Address="https://dist.nuget.org/win-x86-commandline/latest/nuget.exe" FileName="$(NuGetTool)"/>
+  </Target>
+  <!-- Defines a custom task for downloading a file -->
+  <UsingTask TaskName="DownloadFile" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+    <ParameterGroup>
+      <Address ParameterType="System.String" Required="true"/>
+      <FileName ParameterType="System.String" Required="true"/>
+    </ParameterGroup>
+    <Task>
+      <Reference Include="System"/>
+      <Using Namespace="System.Net"/>
+      <Code Type="Fragment" Language="cs"><![CDATA[
+          var webClient = new WebClient();
+          IWebProxy defaultProxy = WebRequest.DefaultWebProxy;
+          if (defaultProxy != null)
+          {
+              defaultProxy.Credentials = CredentialCache.DefaultCredentials;
+              webClient.Proxy = defaultProxy;
+          }      
+          webClient.DownloadFile(Address, FileName);
+          ]]></Code>
+    </Task>
+  </UsingTask>
+</Project>

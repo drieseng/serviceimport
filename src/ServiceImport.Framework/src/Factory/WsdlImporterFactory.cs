@@ -1,12 +1,12 @@
-﻿using BRail.Nis.ServiceImport.Framework.Extension;
-using BRail.Nis.ServiceImport.Framework.Model;
-using System.CodeDom;
+﻿using System.CodeDom;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.ServiceModel.Description;
 using System.Xml.Schema;
+using ServiceImport.Framework.Extension;
+using ServiceImport.Framework.Model;
 
-namespace BRail.Nis.ServiceImport.Framework.Factory
+namespace ServiceImport.Framework.Factory
 {
     public class WsdlImporterFactory : IWsdlImporterFactory
     {

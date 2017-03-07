@@ -1,17 +1,17 @@
 ﻿using System;
 using System.CodeDom;
+using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.ServiceModel.Description;
 using System.Web.Services.Description;
 using System.Xml;
 using System.Xml.Schema;
+using ServiceImport.Framework.Helper;
+using ServiceImport.Framework.Model;
 using SWSServiceDecription = System.Web.Services.Description.ServiceDescription;
-using System.Collections;
-using System.Runtime.Serialization;
-using BRail.Nis.ServiceImport.Framework.Model;
-using BRail.Nis.ServiceImport.Framework.Helper;
 
-namespace BRail.Nis.ServiceImport.Framework.Extension
+namespace ServiceImport.Framework.Extension
 {
     class ServiceModelBuilderExtension : IWsdlImportExtension, IXsdImportExtension
     {

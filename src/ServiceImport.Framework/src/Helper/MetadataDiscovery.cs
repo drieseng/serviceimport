@@ -5,7 +5,7 @@ using System.Web.Services.Discovery;
 using System.Xml.Schema;
 using SWSServiceDescription = System.Web.Services.Description.ServiceDescription;
 
-namespace BRail.Nis.ServiceImport.Framework.Helper
+namespace ServiceImport.Framework.Helper
 {
     public class MetadataDiscovery
     {
