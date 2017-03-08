@@ -22,6 +22,8 @@ namespace ServiceImport.Framework.Extension
     /// </remarks>
     public class ComplexTypeOptionalElementsNillableExtension : IWsdlImportExtension, IServiceContractGenerationExtension, IContractBehavior, IXsdImportExtension
     {
+        private const string SerializationArraysNamespace = "http://schemas.microsoft.com/2003/10/Serialization/Arrays";
+
         private readonly ServiceModel _serviceModel;
         private XsdDataContractImporter _xsdDataContractImporter;
 
@@ -103,9 +105,16 @@ namespace ServiceImport.Framework.Extension
         private void MarkOptionalElementsNillable()
         {
             foreach (var complexType in _serviceModel.ComplexTypes)
+            {
+                // do not touch the IsNillable for the elements in specialized array serialization complex types,
+                // if not the XsdDataContractImporter will generate wrapper classes for these arrays
+                if (complexType.QualifiedName.Namespace == SerializationArraysNamespace)
+                    continue;
+
                 foreach (var element in complexType.Elements)
                     if (element.MinOccurs == 0)
                         element.IsNillable = true;
+            }
         }
 
         /// <summary>
