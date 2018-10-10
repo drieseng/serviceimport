@@ -40,7 +40,7 @@ namespace ServiceImport.MSBuild
         }
 
         [Required]
-        public string Wsdl
+        public ITaskItem[] Wsdls
         {
             get; set;
         }
@@ -59,7 +59,7 @@ namespace ServiceImport.MSBuild
             var typeAccessModifierMappings = CreateTypeAccessModifierMappings();
             var typeRenameMappings = CreateTypeRenameMappings();
             var codeWriter = new FileSystemCodeWriter(codeGeneratorOptions, OutputDirectory);
-            var serviceImporter = new ServiceImporter(Wsdl, xmlTypeMappings, namespaceMappings, typeAccessModifierMappings, typeRenameMappings);
+            var serviceImporter = new ServiceImporter(GetItemSpecs(Wsdls), xmlTypeMappings, namespaceMappings, typeAccessModifierMappings, typeRenameMappings);
 
             serviceImporter.Import(codeWriter);
 
@@ -136,6 +136,18 @@ namespace ServiceImport.MSBuild
             }
 
             return typeRenameMappings;
+        }
+
+        private static string[] GetItemSpecs(ITaskItem[] taskItems)
+        {
+            var itemSpecs = new string[taskItems.Length];
+            for (var i = 0; i < taskItems.Length; i++)
+            {
+                var taskItem = taskItems[i];
+                itemSpecs[i] = taskItem.ItemSpec;
+            }
+
+            return itemSpecs;
         }
     }
 }

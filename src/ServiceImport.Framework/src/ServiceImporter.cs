@@ -14,16 +14,16 @@ namespace ServiceImport.Framework
 {
     public class ServiceImporter
     {
-        public ServiceImporter(string wsdl, IDictionary<XmlTypeCode, CodeTypeReference> xmlTypeMappings, IDictionary<string, string> namespaceMappings, IDictionary<string, TypeAccessModifier> typeAccessModifiers, IDictionary<string, string> typeRenameMappings)
+        public ServiceImporter(string[] wsdls, IDictionary<XmlTypeCode, CodeTypeReference> xmlTypeMappings, IDictionary<string, string> namespaceMappings, IDictionary<string, TypeAccessModifier> typeAccessModifiers, IDictionary<string, string> typeRenameMappings)
         {
-            Wsdl = wsdl;
+            Wsdls = wsdls;
             XmlTypeMappings = xmlTypeMappings;
             NamespaceMappings = namespaceMappings;
             TypeAccessModifiers = typeAccessModifiers;
             TypeRenameMappings = typeRenameMappings;
         }
 
-        public string Wsdl
+        public string[] Wsdls
         {
             get; private set;
         }
@@ -59,10 +59,19 @@ namespace ServiceImport.Framework
 
             var codeCompileUnit = new CodeCompileUnit();
             var codeProvider = CreateCodeProvider();
-            var metadataSet = new MetadataDiscovery().Discover(Wsdl);
+
+            var discovery = new MetadataDiscovery();
+            var metadataSections = new List<MetadataSection>();
+
+            foreach (var wsdl in Wsdls)
+            {
+                var metadataSet = discovery.Discover(wsdl);
+                metadataSections.AddRange(metadataSet.MetadataSections);
+            }
+
             var xsdDataContractImporter = new XsdDataContractImporterFactory().Create(codeProvider, codeCompileUnit, NamespaceMappings);
 
-            var wsdlImporter = new WsdlImporterFactory().Create(metadataSet, xsdDataContractImporter, XmlTypeMappings);
+            var wsdlImporter = new WsdlImporterFactory().Create(new MetadataSet(metadataSections), xsdDataContractImporter, XmlTypeMappings);
             var serviceContractGenerator = CreateServiceContractGenerator(codeCompileUnit, NamespaceMappings);
 
             wsdlImporter.ImportAllBindings();

@@ -118,7 +118,9 @@ namespace ServiceImport.Framework.Extension
                                     throw new Exception($"Wrapper element '{parametersPart.Element}' could not be found.");
 
                                 foreach (var parameterElement in wrapperElement.GetWrapperElementParameters())
+                                {
                                     operationParameters.Add(parameterElement.Name, new OperationParameterInfo(parameterElement));
+                                }
 
                                 yield return new OperationMessageInfo(operationMessage.Message, operationParameters);
                             }
