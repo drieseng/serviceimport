@@ -35,6 +35,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\VersionInfo.generated.cs">
@@ -42,6 +44,7 @@
     </Compile>
     <Compile Include="Extension\PascalCaseFieldNamesExtensionTests.cs" />
     <Compile Include="Extension\TypeRenameExtensionTests.cs" />
+    <Compile Include="Helper\WsdlImporterExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

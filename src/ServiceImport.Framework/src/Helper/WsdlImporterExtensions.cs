@@ -20,8 +20,67 @@ namespace ServiceImport.Framework.Helper
                     allSchemas.Add(schema);
             foreach (XmlSchema schema in xmlSchemas.Schemas())
                 allSchemas.Add(schema);
-            allSchemas.Compile();
+
+            NormalizeSchemas(allSchemas);
             return allSchemas;
+        }
+
+        /// <summary>
+        /// Eliminates duplicate XML schemas from the specified <see cref="XmlSchemaSet"/>.
+        /// </summary>
+        /// <param name="schemaSet">The <see cref="XmlSchemaSet"/> to normalize.</param>
+        /// <remarks>
+        /// The duplicates are introduced when <see cref="XmlSchemaSet"/> resolves imports.
+        /// The same XML Schema can be present with and without a value for <see cref="XmlSchemaObject.SourceUri"/>.
+        /// </remarks>
+        private static void NormalizeSchemas(XmlSchemaSet schemaSet)
+        {
+            //var importedSchemas = new Dictionary<string, XmlSchema>();
+            //var nonImportedSchemas = new Dictionary<string, XmlSchema>();
+
+            //foreach (XmlSchema x in schemaSet.Schemas())
+            //{
+            //    if (x.SourceUri == string.Empty)
+            //        importedSchemas.Add(x.TargetNamespace, x);
+            //    else if (!nonImportedSchemas.ContainsKey(x.TargetNamespace))
+            //        nonImportedSchemas.Add(x.TargetNamespace, x);
+            //}
+
+            //var cleaned = new XmlSchemaSet();
+
+            //foreach (XmlSchema x in importedSchemas.Values)
+            //{
+            //    if (nonImportedSchemas.TryGetValue(x.TargetNamespace, out var nonImportedSchema))
+            //    {
+            //        Console.WriteLine("ADD NON-IMPORTED => " + nonImportedSchema.TargetNamespace + " => " + nonImportedSchema.SourceUri);
+            //        cleaned.Add(nonImportedSchema);
+            //        nonImportedSchemas.Remove(x.TargetNamespace);
+            //    }
+            //}
+
+            //foreach (XmlSchema x in nonImportedSchemas.Values)
+            //{
+            //    Console.WriteLine("ADD => " + x.TargetNamespace + " => " + x.SourceUri);
+            //    cleaned.Add(x);
+            //}
+
+            var newUniqueSchemas = new Dictionary<string, XmlSchema>();
+            var newDuplicateSchemas = new List<XmlSchema>();
+
+            foreach (XmlSchema x in schemaSet.Schemas())
+            {
+                if (!newUniqueSchemas.ContainsKey(x.TargetNamespace))
+                    newUniqueSchemas.Add(x.TargetNamespace, x);
+                else
+                    newDuplicateSchemas.Add(x);
+            }
+
+            foreach (XmlSchema x in newDuplicateSchemas)
+            {
+                schemaSet.Remove(x);
+            }
+
+            schemaSet.Compile();
         }
 
         public static IEnumerable<XmlSchemaElement> GetWrapperElementParameters(this XmlSchemaElement wrapperElement)
@@ -183,8 +242,10 @@ namespace ServiceImport.Framework.Helper
                     return false;
                 case XmlTypeCode.Integer:
                     return false;
+                case XmlTypeCode.DateTime:
+                    return false;
                 default:
-                    throw new Exception();
+                    throw new NotSupportedException($"XML type code '{simpleType.TypeCode}' (in {element.QualifiedName}) is not supported");
             }
         }
 
