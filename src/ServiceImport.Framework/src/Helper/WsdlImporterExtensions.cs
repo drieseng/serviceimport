@@ -244,6 +244,8 @@ namespace ServiceImport.Framework.Helper
                     return false;
                 case XmlTypeCode.DateTime:
                     return false;
+                case XmlTypeCode.Boolean:
+                    return false;
                 default:
                     throw new NotSupportedException($"XML type code '{simpleType.TypeCode}' (in {element.QualifiedName}) is not supported");
             }
