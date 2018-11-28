@@ -37,6 +37,7 @@
     </Compile>
     <Compile Include="Factory\CodeGeneratorOptionsFactory.cs" />
     <Compile Include="Factory\NamespaceMappingFactory.cs" />
+    <Compile Include="Factory\ServiceContractGenerationOptionsFactory.cs" />
     <Compile Include="Factory\TypeAccessModifierMappingFactory.cs" />
     <Compile Include="Factory\TypeRenameMappingFactory.cs" />
     <Compile Include="Factory\XmlTypeMappingFactory.cs" />
@@ -59,6 +60,7 @@
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
     <Reference Include="System" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.XML" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

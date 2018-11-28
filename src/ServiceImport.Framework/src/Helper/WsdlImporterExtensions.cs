@@ -35,49 +35,20 @@ namespace ServiceImport.Framework.Helper
         /// </remarks>
         private static void NormalizeSchemas(XmlSchemaSet schemaSet)
         {
-            //var importedSchemas = new Dictionary<string, XmlSchema>();
-            //var nonImportedSchemas = new Dictionary<string, XmlSchema>();
-
-            //foreach (XmlSchema x in schemaSet.Schemas())
-            //{
-            //    if (x.SourceUri == string.Empty)
-            //        importedSchemas.Add(x.TargetNamespace, x);
-            //    else if (!nonImportedSchemas.ContainsKey(x.TargetNamespace))
-            //        nonImportedSchemas.Add(x.TargetNamespace, x);
-            //}
-
-            //var cleaned = new XmlSchemaSet();
-
-            //foreach (XmlSchema x in importedSchemas.Values)
-            //{
-            //    if (nonImportedSchemas.TryGetValue(x.TargetNamespace, out var nonImportedSchema))
-            //    {
-            //        Console.WriteLine("ADD NON-IMPORTED => " + nonImportedSchema.TargetNamespace + " => " + nonImportedSchema.SourceUri);
-            //        cleaned.Add(nonImportedSchema);
-            //        nonImportedSchemas.Remove(x.TargetNamespace);
-            //    }
-            //}
-
-            //foreach (XmlSchema x in nonImportedSchemas.Values)
-            //{
-            //    Console.WriteLine("ADD => " + x.TargetNamespace + " => " + x.SourceUri);
-            //    cleaned.Add(x);
-            //}
-
             var newUniqueSchemas = new Dictionary<string, XmlSchema>();
             var newDuplicateSchemas = new List<XmlSchema>();
 
-            foreach (XmlSchema x in schemaSet.Schemas())
+            foreach (XmlSchema schema in schemaSet.Schemas())
             {
-                if (!newUniqueSchemas.ContainsKey(x.TargetNamespace))
-                    newUniqueSchemas.Add(x.TargetNamespace, x);
+                if (!newUniqueSchemas.ContainsKey(schema.TargetNamespace))
+                    newUniqueSchemas.Add(schema.TargetNamespace, schema);
                 else
-                    newDuplicateSchemas.Add(x);
+                    newDuplicateSchemas.Add(schema);
             }
 
-            foreach (XmlSchema x in newDuplicateSchemas)
+            foreach (var schema in newDuplicateSchemas)
             {
-                schemaSet.Remove(x);
+                schemaSet.Remove(schema);
             }
 
             schemaSet.Compile();

@@ -23,31 +23,17 @@ namespace ServiceImport.Framework
             TypeRenameMappings = typeRenameMappings;
         }
 
-        public string[] Wsdls
-        {
-            get; private set;
-        }
+        public string[] Wsdls { get; }
 
-        public IDictionary<XmlTypeCode, CodeTypeReference> XmlTypeMappings
-        {
-            get; private set;
-        }
+        public IDictionary<XmlTypeCode, CodeTypeReference> XmlTypeMappings { get; }
 
-        public IDictionary<string, string> NamespaceMappings
-        {
-            get; private set;
-        }
+        public IDictionary<string, string> NamespaceMappings { get; }
 
+        public ServiceContractGenerationOptions ServiceContractGenerationOptions { get; set; }
 
-        public IDictionary<string, TypeAccessModifier> TypeAccessModifiers
-        {
-            get; private set;
-        }
+        public IDictionary<string, TypeAccessModifier> TypeAccessModifiers { get; }
 
-        public IDictionary<string, string> TypeRenameMappings
-        {
-            get; private set;
-        }
+        public IDictionary<string, string> TypeRenameMappings { get; }
 
         public void Import(ICodeWriter codeWriter)
         {
@@ -72,7 +58,9 @@ namespace ServiceImport.Framework
             var xsdDataContractImporter = new XsdDataContractImporterFactory().Create(codeProvider, codeCompileUnit, NamespaceMappings);
 
             var wsdlImporter = new WsdlImporterFactory().Create(new MetadataSet(metadataSections), xsdDataContractImporter, XmlTypeMappings);
-            var serviceContractGenerator = CreateServiceContractGenerator(codeCompileUnit, NamespaceMappings);
+            var serviceContractGenerator = CreateServiceContractGenerator(codeCompileUnit,
+                                                                          NamespaceMappings,
+                                                                          ServiceContractGenerationOptions);
 
             wsdlImporter.ImportAllBindings();
             wsdlImporter.ImportAllEndpoints();
@@ -92,11 +80,13 @@ namespace ServiceImport.Framework
             return new CSharpCodeProvider(options);
         }
 
-        private static ServiceContractGenerator CreateServiceContractGenerator(CodeCompileUnit codeCompileUnit, IDictionary<string, string> namespaceMappings)
+        private static ServiceContractGenerator CreateServiceContractGenerator(CodeCompileUnit codeCompileUnit,
+                                                                               IDictionary<string, string> namespaceMappings,
+                                                                               ServiceContractGenerationOptions serviceContractGenerationOptions)
         {
             var gen = new ServiceContractGenerator(codeCompileUnit)
                 {
-                    Options = ServiceContractGenerationOptions.ClientClass
+                    Options = serviceContractGenerationOptions
                 };
             foreach (var namespaceMapping in namespaceMappings)
                 gen.NamespaceMappings.Add(namespaceMapping.Key, namespaceMapping.Value);

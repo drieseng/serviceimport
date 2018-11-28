@@ -39,6 +39,11 @@ namespace ServiceImport.MSBuild
             get; set;
         }
 
+        public ITaskItem ServiceContractGenerationOptions
+        {
+            get; set;
+        }
+
         [Required]
         public ITaskItem[] Wsdls
         {
@@ -54,12 +59,18 @@ namespace ServiceImport.MSBuild
         public override bool Execute()
         {
             var codeGeneratorOptions = new CodeGeneratorOptionsFactory().Create(CodeGeneratorOptions);
+            var serviceContractGenerationOptions = new ServiceContractGenerationOptionsFactory().Create(ServiceContractGenerationOptions);
             var xmlTypeMappings = CreateXmlTypeMappings();
             var namespaceMappings = CreateNamespaceMappings();
             var typeAccessModifierMappings = CreateTypeAccessModifierMappings();
             var typeRenameMappings = CreateTypeRenameMappings();
             var codeWriter = new FileSystemCodeWriter(codeGeneratorOptions, OutputDirectory);
-            var serviceImporter = new ServiceImporter(GetItemSpecs(Wsdls), xmlTypeMappings, namespaceMappings, typeAccessModifierMappings, typeRenameMappings);
+            var serviceImporter = new ServiceImporter(GetItemSpecs(Wsdls),
+                                                      xmlTypeMappings,
+                                                      namespaceMappings,
+                                                      typeAccessModifierMappings,
+                                                      typeRenameMappings);
+            serviceImporter.ServiceContractGenerationOptions = serviceContractGenerationOptions;
 
             serviceImporter.Import(codeWriter);
 
@@ -77,6 +88,13 @@ namespace ServiceImport.MSBuild
                 foreach (var item in NamespaceMappings)
                 {
                     var namespaceMapping = namespaceMappingFactory.Create(item);
+
+                    if (namespaceMappings.ContainsKey(namespaceMapping.TargetNamespace))
+                    {
+                        Log.LogError($"NamespaceMapping for '{namespaceMapping.TargetNamespace}' is defined more than once.");
+                        continue;
+                    }
+
                     namespaceMappings.Add(namespaceMapping.TargetNamespace, namespaceMapping.ClrNamespace);
                 }
             }
@@ -95,6 +113,13 @@ namespace ServiceImport.MSBuild
                 foreach (var item in XmlTypeMappings)
                 {
                     var xmlTypeMapping = xmlTypeMappingFactory.Create(item);
+
+                    if (xmlTypeMappings.ContainsKey(xmlTypeMapping.XmlTypeCode))
+                    {
+                        Log.LogError($"XmlTypeMapping for '{xmlTypeMapping.XmlTypeCode}' is defined more than once.");
+                        continue;
+                    }
+
                     xmlTypeMappings.Add(xmlTypeMapping.XmlTypeCode, xmlTypeMapping.CodeTypeReference);
                 }
             }
@@ -113,6 +138,13 @@ namespace ServiceImport.MSBuild
                 foreach (var item in TypeAccessModifierMappings)
                 {
                     var typeAccessModifierMapping = typeAccessModifierMappingsFactory.Create(item);
+
+                    if (typeAccessModifierMappings.ContainsKey(typeAccessModifierMapping.TypeName))
+                    {
+                        Log.LogError($"TypeAccessModifierMapping for '{typeAccessModifierMapping.TypeName}' is defined more than once.");
+                        continue;
+                    }
+
                     typeAccessModifierMappings.Add(typeAccessModifierMapping.TypeName, typeAccessModifierMapping.AccessModifier);
                 }
             }
@@ -131,6 +163,13 @@ namespace ServiceImport.MSBuild
                 foreach (var item in TypeRenameMappings)
                 {
                     var typeRenameMapping = typeRenameMappingFactory.Create(item);
+
+                    if (typeRenameMappings.ContainsKey(typeRenameMapping.OriginalTypeName))
+                    {
+                        Log.LogError($"TypeRenameMapping for '{typeRenameMapping.OriginalTypeName}' is defined more than once.");
+                        continue;
+                    }
+
                     typeRenameMappings.Add(typeRenameMapping.OriginalTypeName, typeRenameMapping.NewTypeName);
                 }
             }
