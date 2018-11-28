@@ -6,6 +6,8 @@ namespace ServiceImport.MSBuild.Factory
 {
     public class ServiceContractGenerationOptionsFactory
     {
+
+
         public ServiceContractGenerationOptions Create(ITaskItem taskItem)
         {
             if (taskItem == null)
@@ -13,35 +15,69 @@ namespace ServiceImport.MSBuild.Factory
 
             var options = ServiceContractGenerationOptions.None;
 
-            var clientClass = taskItem.GetMetadata("ClientClass");
-            if (clientClass != null && bool.Parse(clientClass))
+            if (GetBooleanMetadataValue(taskItem, MetadataNames.ClientClass))
+            {
                 options |= ServiceContractGenerationOptions.ClientClass;
+            }
 
-            var asynchronousMethods = taskItem.GetMetadata("AsynchronousMethods");
-            if (asynchronousMethods != null && bool.Parse(asynchronousMethods))
+            if (GetBooleanMetadataValue(taskItem, MetadataNames.AsynchronousMethods))
+            {
                 options |= ServiceContractGenerationOptions.AsynchronousMethods;
+            }
 
-            var channelInterface = taskItem.GetMetadata("ChannelInterface");
-            if (channelInterface != null && bool.Parse(channelInterface))
+            if (GetBooleanMetadataValue(taskItem, MetadataNames.ChannelInterface))
+            {
                 options |= ServiceContractGenerationOptions.ChannelInterface;
+            }
 
-            var eventBasedAsynchronousMethods = taskItem.GetMetadata("EventBasedAsynchronousMethods");
-            if (eventBasedAsynchronousMethods != null && bool.Parse(eventBasedAsynchronousMethods))
+            if (GetBooleanMetadataValue(taskItem, MetadataNames.EventBasedAsynchronousMethods))
+            {
                 options |= ServiceContractGenerationOptions.EventBasedAsynchronousMethods;
+            }
 
-            var internalTypes = taskItem.GetMetadata("InternalTypes");
-            if (internalTypes != null && bool.Parse(internalTypes))
+            if (GetBooleanMetadataValue(taskItem, MetadataNames.InternalTypes))
+            {
                 options |= ServiceContractGenerationOptions.InternalTypes;
+            }
 
-            var taskBasedAsynchronousMethod = taskItem.GetMetadata("TaskBasedAsynchronousMethod");
-            if (taskBasedAsynchronousMethod != null && bool.Parse(taskBasedAsynchronousMethod))
+            if (GetBooleanMetadataValue(taskItem, MetadataNames.TaskBasedAsynchronousMethod))
+            {
                 options |= ServiceContractGenerationOptions.TaskBasedAsynchronousMethod;
+            }
 
-            var typedMessages = taskItem.GetMetadata("TypedMessages");
-            if (typedMessages != null && bool.Parse(typedMessages))
+            if (GetBooleanMetadataValue(taskItem, MetadataNames.TypedMessages))
+            {
                 options |= ServiceContractGenerationOptions.TypedMessages;
+            }
 
             return options;
+        }
+
+        private static bool GetBooleanMetadataValue(ITaskItem taskItem, string metadataName)
+        {
+            var metadataValue = taskItem.GetMetadata(metadataName);
+            if (string.IsNullOrEmpty(metadataValue))
+            {
+                return false;
+            }
+
+            if (!bool.TryParse(metadataValue, out var flag))
+            {
+                throw new ArgumentException($"The value of the {metadataName} metadata is not a valid Boolean.");
+            }
+
+            return flag;
+        }
+
+        private static class MetadataNames
+        {
+            public const string ClientClass = "ClientClass";
+            public const string AsynchronousMethods = "AsynchronousMethods";
+            public const string ChannelInterface = "ChannelInterface";
+            public const string EventBasedAsynchronousMethods = "EventBasedAsynchronousMethods";
+            public const string InternalTypes = "InternalTypes";
+            public const string TaskBasedAsynchronousMethod = "TaskBasedAsynchronousMethod";
+            public const string TypedMessages = "TypedMessages";
         }
     }
 }
