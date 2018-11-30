@@ -94,23 +94,20 @@ namespace ServiceImport.Framework.Extension
         {
             foreach (var member in typeDeclaration.Members)
             {
-                var field = member as CodeMemberField;
-                if (field != null)
+                if (member is CodeMemberField field)
                 {
                     field.Name = field.Name.ToPascalCase();
                     continue;
                 }
 
-                var property = member as CodeMemberProperty;
-                if (property != null)
+                if (member is CodeMemberProperty property)
                 {
                     if (property.GetStatements.Count == 1)
                     {
                         var returnStatement = property.GetStatements[0] as CodeMethodReturnStatement;
                         if (returnStatement != null && returnStatement.Expression != null)
                         {
-                            var fieldReference = returnStatement.Expression as CodeFieldReferenceExpression;
-                            if (fieldReference != null)
+                            if (returnStatement.Expression is CodeFieldReferenceExpression fieldReference)
                             {
                                 fieldReference.FieldName = fieldReference.FieldName.ToPascalCase();
                             }
@@ -122,8 +119,7 @@ namespace ServiceImport.Framework.Extension
                         var assignStatement = property.SetStatements[0] as CodeAssignStatement;
                         if (assignStatement != null && assignStatement.Left != null)
                         {
-                            var left = assignStatement.Left as CodeFieldReferenceExpression;
-                            if (left != null)
+                            if (assignStatement.Left is CodeFieldReferenceExpression left)
                             {
                                 left.FieldName = left.FieldName.ToPascalCase();
                             }
@@ -133,8 +129,7 @@ namespace ServiceImport.Framework.Extension
                     continue;
                 }
 
-                var type = member as CodeTypeDeclaration;
-                if (type != null)
+                if (member is CodeTypeDeclaration type)
                     PascalCaseTypeMembers(type);
             }
         }

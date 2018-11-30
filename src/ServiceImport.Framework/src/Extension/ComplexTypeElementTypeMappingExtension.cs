@@ -128,8 +128,7 @@ namespace ServiceImport.Framework.Extension
                     if (element.MaxOccurs != 1)
                         continue;
 
-                    CodeTypeReference elementTypeReference;
-                    if (!_xmlTypeMapping.TryGetValue(element.TypeCode, out elementTypeReference))
+                    if (!_xmlTypeMapping.TryGetValue(element.TypeCode, out var elementTypeReference))
                         continue;
 
                     if (element.MinOccurs == 0)
@@ -141,11 +140,9 @@ namespace ServiceImport.Framework.Extension
                         property.Type = elementTypeReference;
                     }
 
-                    var returnStatement = property.GetStatements[0] as CodeMethodReturnStatement;
-                    if (returnStatement != null && returnStatement.Expression != null)
+                    if (property.GetStatements[0] is CodeMethodReturnStatement returnStatement && returnStatement.Expression != null)
                     {
-                        var fieldReference = returnStatement.Expression as CodeFieldReferenceExpression;
-                        if (fieldReference != null)
+                        if (returnStatement.Expression is CodeFieldReferenceExpression fieldReference)
                         {
                             var field = typeDeclaration.Fields().SingleOrDefault(p => p.Name == fieldReference.FieldName);
                             if (field == null)
