@@ -4,7 +4,7 @@ using System.ServiceModel.Description;
 using System.Web.Services.Description;
 using System.Xml;
 using System.Xml.Schema;
-using SWSServiceDecription = System.Web.Services.Description.ServiceDescription;
+using SWSServiceDescription = System.Web.Services.Description.ServiceDescription;
 
 namespace ServiceImport.Framework.Helper
 {
@@ -15,44 +15,93 @@ namespace ServiceImport.Framework.Helper
         public static XmlSchemaSet MergeSchemas(this ServiceDescriptionCollection wsdlDocuments, XmlSchemaSet xmlSchemas)
         {
             var allSchemas = new XmlSchemaSet();
-            foreach (SWSServiceDecription wsdlDoc in wsdlDocuments)
+            foreach (SWSServiceDescription wsdlDoc in wsdlDocuments)
                 foreach (XmlSchema schema in wsdlDoc.Types.Schemas)
                     allSchemas.Add(schema);
             foreach (XmlSchema schema in xmlSchemas.Schemas())
                 allSchemas.Add(schema);
 
-            NormalizeSchemas(allSchemas);
-            return allSchemas;
+            return NormalizeSchemas(allSchemas);
         }
 
         /// <summary>
-        /// Eliminates duplicate XML schemas from the specified <see cref="XmlSchemaSet"/>.
+        /// Normalized the XML schemas in the specified <see cref="XmlSchemaSet"/>.
         /// </summary>
         /// <param name="schemaSet">The <see cref="XmlSchemaSet"/> to normalize.</param>
+        /// <returns>
+        /// The normalized <see cref="XmlSchemaSet"/>.
+        /// </returns>
         /// <remarks>
-        /// The duplicates are introduced when <see cref="XmlSchemaSet"/> resolves imports.
-        /// The same XML Schema can be present with and without a value for <see cref="XmlSchemaObject.SourceUri"/>.
+        /// <para>
+        /// Merges schema objects from XML schemas with the same target namespace.
+        /// </para>
+        /// <para>
+        /// A <see cref="XmlSchemaSet"/> can contain more than one XML schemas for the same target namespace because:
+        /// <list type="bullet">
+        ///   <item>
+        ///     <description>
+        ///     Duplicates are introduced when <see cref="XmlSchemaSet"/> resolves imports.
+        ///     </description>
+        ///   </item>
+        ///   <item>
+        ///     <description>
+        ///     Multiple WSDLs can define an inline XML schema with the same target namespace. These must be united
+        ///     to ensure the elements and types from all these XML schemas are available to the importer.
+        ///     </description>
+        ///   </item>
+        /// </list>
+        /// </para>
         /// </remarks>
-        private static void NormalizeSchemas(XmlSchemaSet schemaSet)
+        private static XmlSchemaSet NormalizeSchemas(XmlSchemaSet schemaSet)
         {
-            var newUniqueSchemas = new Dictionary<string, XmlSchema>();
-            var newDuplicateSchemas = new List<XmlSchema>();
+            var normalizedSchemas = new Dictionary<string, XmlSchema>();
 
             foreach (XmlSchema schema in schemaSet.Schemas())
             {
-                if (!newUniqueSchemas.ContainsKey(schema.TargetNamespace))
-                    newUniqueSchemas.Add(schema.TargetNamespace, schema);
-                else
-                    newDuplicateSchemas.Add(schema);
+                if (!normalizedSchemas.TryGetValue(schema.TargetNamespace, out var normalizedSchema))
+                {
+                    normalizedSchema = new XmlSchema();
+                    normalizedSchema.TargetNamespace = schema.TargetNamespace;
+                    normalizedSchemas.Add(schema.TargetNamespace, normalizedSchema);
+                }
+
+                foreach (var schemaObject in schema.Items)
+                {
+                    if (schemaObject is XmlSchemaElement element)
+                    {
+                        if (!normalizedSchema.Contains(element))
+                        {
+                            normalizedSchema.Items.Add(element);
+                        }
+                    }
+                    else if (schemaObject is XmlSchemaSimpleType simpleType)
+                    {
+                        if (!normalizedSchema.Contains(simpleType))
+                        {
+                            normalizedSchema.Items.Add(simpleType);
+                        }
+                    }
+                    else if (schemaObject is XmlSchemaComplexType complexType)
+                    {
+                        if (!normalizedSchema.Contains(complexType))
+                        {
+                            normalizedSchema.Items.Add(complexType);
+                        }
+                    }
+                }
             }
 
-            foreach (var schema in newDuplicateSchemas)
+            var normalizedSchemaSet = new XmlSchemaSet();
+
+            foreach (var kvp in normalizedSchemas)
             {
-                schemaSet.Remove(schema);
+                normalizedSchemaSet.Add(kvp.Value);
             }
 
-            schemaSet.Compile();
+            normalizedSchemaSet.Compile();
+            return normalizedSchemaSet;
         }
+
 
         public static IEnumerable<XmlSchemaElement> GetWrapperElementParameters(this XmlSchemaElement wrapperElement)
         {
@@ -175,12 +224,10 @@ namespace ServiceImport.Framework.Helper
             if (schemaType == null)
                 throw new ArgumentException(string.Format("ElementSchemaType for '{0}' is null.", element.Name), "element");
 
-            var complexType = schemaType as XmlSchemaComplexType;
-            if (complexType != null)
+            if (schemaType is XmlSchemaComplexType)
                 return true;
 
-            var simpleType = schemaType as XmlSchemaSimpleType;
-            if (simpleType == null)
+            if (!(schemaType is XmlSchemaSimpleType simpleType))
                 return true;
 
             if (!simpleType.QualifiedName.IsEmpty && simpleType.QualifiedName.Namespace == "http://schemas.microsoft.com/2003/10/Serialization/")
@@ -224,8 +271,7 @@ namespace ServiceImport.Framework.Helper
 
         private static bool IsEnumeration(XmlSchemaSimpleType simpleType)
         {
-            var restriction = simpleType.Content as XmlSchemaSimpleTypeRestriction;
-            if (restriction == null)
+            if (!(simpleType.Content is XmlSchemaSimpleTypeRestriction restriction))
                 return false;
 
             // only simple types with a restriction that has xs:string as base can be mapped to a .NET enumeration
