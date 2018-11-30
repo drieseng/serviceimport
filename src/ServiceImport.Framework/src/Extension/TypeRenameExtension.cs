@@ -61,37 +61,76 @@ namespace ServiceImport.Framework.Extension
                 {
                     if (originalNamespace.Types().SingleOrDefault(t => t.Name == newTypeName.Type) != null)
                         throw new Exception($"Type '{newTypeName}' already exists.");
-
-                    // modify the name of the type
-                    typeDeclaration.Name = newTypeName.Type;
-
-                    continue;
-                }
-
-                var newNamespace = compileUnit.Namespaces().SingleOrDefault(n => n.Name == newTypeName.Namespace);
-                if (newNamespace == null)
-                {
-                    newNamespace = new CodeNamespace(newTypeName.Namespace);
-                    compileUnit.Namespaces.Add(newNamespace);
                 }
                 else
                 {
-                    if (newNamespace.Types().Any(p => p.Name == newTypeName.Type))
-                        throw new Exception($"Type '{newTypeName}' already exists.");
+                    var newNamespace = compileUnit.Namespaces().SingleOrDefault(n => n.Name == newTypeName.Namespace);
+                    if (newNamespace == null)
+                    {
+                        newNamespace = new CodeNamespace(newTypeName.Namespace);
+                        compileUnit.Namespaces.Add(newNamespace);
+                    }
+                    else
+                    {
+                        if (newNamespace.Types().Any(p => p.Name == newTypeName.Type))
+                            throw new Exception($"Type '{newTypeName}' already exists.");
+                    }
+
+                    // add the type to the new namespace
+                    newNamespace.Types.Add(typeDeclaration);
+
+                    // remove the type from the original namespace
+                    originalNamespace.Types.Remove(typeDeclaration);
+
+                    // remove the original namespace if we just removed the last type from it
+                    if (originalNamespace.Types.Count == 0)
+                        compileUnit.Namespaces.Remove(originalNamespace);
                 }
 
                 // modify the name of the type
                 typeDeclaration.Name = newTypeName.Type;
 
-                // add the type to the new namespace
-                newNamespace.Types.Add(typeDeclaration);
+                var originalFullTypeName = originalTypeName.ToString();
+                var newFullTypeName = newTypeName.ToString();
 
-                // remove the type from the original namespace
-                originalNamespace.Types.Remove(typeDeclaration);
+                // Updating a type declaration in CodeDOM does not update type parameters of that type
+                foreach (var ns in compileUnit.Namespaces())
+                {
+                    foreach (CodeTypeDeclaration type in ns.Types)
+                    {
+                        foreach (CodeTypeMember member in type.Members)
+                        {
+                            if (member is CodeMemberField field)
+                            {
+                                if (field.Type.BaseType == originalFullTypeName)
+                                {
+                                    field.Type.BaseType = newFullTypeName;
+                                }
+                                else
+                                {
+                                    foreach (CodeTypeReference typeArgument in field.Type.TypeArguments)
+                                    {
+                                        if (typeArgument.BaseType == originalFullTypeName)
+                                        {
+                                            typeArgument.BaseType = newFullTypeName;
+                                        }
+                                    }
+                                }
 
-                // remove the original namespace if we just removed the last type from it
-                if (originalNamespace.Types.Count == 0)
-                    compileUnit.Namespaces.Remove(originalNamespace);
+                                continue;
+                            }
+
+                            if (member is CodeMemberProperty property)
+                            {
+                                if (property.Type.BaseType == originalFullTypeName)
+                                {
+                                    property.Type.BaseType = newFullTypeName;
+                                }
+                            }
+                        }
+                    }
+                }
+
             }
         }
 
