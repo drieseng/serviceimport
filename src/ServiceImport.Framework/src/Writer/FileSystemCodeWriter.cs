@@ -42,7 +42,7 @@ namespace ServiceImport.Framework.Writer
 
                     var typeOutputFile = Path.Combine(namespaceOutputDirectory, x.Name + "." + codeDomProvider.FileExtension);
 
-                    using (var sw = new StreamWriter(File.Open(typeOutputFile, FileMode.Create, FileAccess.ReadWrite)))
+                    using (var sw = new StreamWriter(File.Open(typeOutputFile, FileMode.CreateNew, FileAccess.ReadWrite)))
                     {
                         codeDomProvider.GenerateCodeFromCompileUnit(compileUnit, sw, CodeGeneratorOptions);
                     }
