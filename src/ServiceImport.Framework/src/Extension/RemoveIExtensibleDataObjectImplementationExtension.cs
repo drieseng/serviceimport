@@ -105,16 +105,14 @@ namespace ServiceImport.Framework.Extension
 
                 if (implementsIExtensibleDataObject)
                 {
-                    var property = member as CodeMemberProperty;
-                    if (property != null)
+                    if (member is CodeMemberProperty property)
                     {
                         if (property.Name == "ExtensionData")
                             typeDeclaration.Members.RemoveAt(j);
                         continue;
                     }
 
-                    var field = member as CodeMemberField;
-                    if (field != null)
+                    if (member is CodeMemberField field)
                     {
                         if (field.Name == "extensionDataField")
                             typeDeclaration.Members.RemoveAt(j);
@@ -122,8 +120,7 @@ namespace ServiceImport.Framework.Extension
                     }
                 }
 
-                var type = member as CodeTypeDeclaration;
-                if (type != null)
+                if (member is CodeTypeDeclaration type)
                     RemoveIExtensibleDataObjectImplementation(type);
             }
         }

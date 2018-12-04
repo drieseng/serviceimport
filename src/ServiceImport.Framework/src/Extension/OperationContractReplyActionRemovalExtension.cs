@@ -53,12 +53,10 @@ namespace ServiceImport.Framework.Extension
             if (replyActionArgument == null)
                 return;
 
-            var expression = replyActionArgument.Value as CodePrimitiveExpression;
-            if (expression == null)
+            if (!(replyActionArgument.Value is CodePrimitiveExpression expression))
                 return;
 
-            var expressionText = expression.Value as string;
-            if (expressionText == null)
+            if (!(expression.Value is string expressionText))
                 return;
 
             if (expressionText == "*")

@@ -119,8 +119,7 @@ namespace ServiceImport.Framework.Extension
             {
                 var globalType = globalTypeEntry.Value;
 
-                var complexType = globalType as XmlSchemaComplexType;
-                if (complexType == null || complexType.Name == null)
+                if (!(globalType is XmlSchemaComplexType complexType) || complexType.Name == null)
                     continue;
 
                 if (complexType.IsAbstract)
