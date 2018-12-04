@@ -50,6 +50,8 @@
       <Link>Properties\VersionInfo.generated.cs</Link>
     </Compile>
     <Compile Include="CodeDom\TypeAccessModifier.cs" />
+    <Compile Include="DataContractGenerationOptions.cs" />
+    <Compile Include="Extension\EmitDefaultValueExtension.cs" />
     <Compile Include="Extension\IDataContractGenerationExtension.cs" />
     <Compile Include="Extension\TypeAccessModifierExtension.cs" />
     <Compile Include="Extension\TypeRenameExtension.cs" />

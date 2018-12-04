@@ -6,8 +6,6 @@ namespace ServiceImport.MSBuild.Factory
 {
     public class ServiceContractGenerationOptionsFactory
     {
-
-
         public ServiceContractGenerationOptions Create(ITaskItem taskItem)
         {
             if (taskItem == null)

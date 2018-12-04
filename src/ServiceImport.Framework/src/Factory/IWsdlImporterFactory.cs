@@ -8,6 +8,9 @@ namespace ServiceImport.Framework.Factory
 {
     public interface IWsdlImporterFactory
     {
-        WsdlImporter Create(MetadataSet metadataSet, XsdDataContractImporter xsdDataContractImporter, IDictionary<XmlTypeCode, CodeTypeReference> xmlTypeMappings);
+        WsdlImporter Create(MetadataSet metadataSet,
+                            XsdDataContractImporter xsdDataContractImporter,
+                            IDictionary<XmlTypeCode, CodeTypeReference> xmlTypeMappings,
+                            DataContractGenerationOptions dataContractGenerationOptions);
     }
 }

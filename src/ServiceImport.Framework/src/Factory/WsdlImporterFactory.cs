@@ -10,7 +10,10 @@ namespace ServiceImport.Framework.Factory
 {
     public class WsdlImporterFactory : IWsdlImporterFactory
     {
-        public WsdlImporter Create(MetadataSet metadataSet, XsdDataContractImporter xsdDataContractImporter, IDictionary<XmlTypeCode, CodeTypeReference> xmlTypeMappings)
+        public WsdlImporter Create(MetadataSet metadataSet,
+                                   XsdDataContractImporter xsdDataContractImporter,
+                                   IDictionary<XmlTypeCode, CodeTypeReference> xmlTypeMappings,
+                                   DataContractGenerationOptions dataContractGenerationOptions)
         {
             var serviceModel = new ServiceModel();
 
@@ -19,7 +22,13 @@ namespace ServiceImport.Framework.Factory
             wsdlImporter.WsdlImportExtensions.Add(new ServiceModelBuilderExtension(serviceModel));
             wsdlImporter.WsdlImportExtensions.Add(new OperationParameterNillableExtension(serviceModel));
             wsdlImporter.WsdlImportExtensions.Add(new ComplexTypeElementTypeMappingExtension(serviceModel, xmlTypeMappings));
-            wsdlImporter.WsdlImportExtensions.Add(new ComplexTypeOptionalElementsNillableExtension(serviceModel));
+
+            if ((dataContractGenerationOptions & DataContractGenerationOptions.OptionalElementAsNullable) != 0)
+            {
+                wsdlImporter.WsdlImportExtensions.Add(new ComplexTypeOptionalElementsNillableExtension(serviceModel));
+            }
+
+            wsdlImporter.WsdlImportExtensions.Add(new EmitDefaultValueExtension(serviceModel));
             wsdlImporter.WsdlImportExtensions.Add(new AbstractTypeExtension(serviceModel));
             wsdlImporter.WsdlImportExtensions.Add(new OperationParameterTypeMappingExtension(xmlTypeMappings));
             wsdlImporter.WsdlImportExtensions.Add(new PascalCaseFieldNamesExtension());

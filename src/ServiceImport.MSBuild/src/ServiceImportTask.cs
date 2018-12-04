@@ -44,6 +44,11 @@ namespace ServiceImport.MSBuild
             get; set;
         }
 
+        public ITaskItem DataContractGenerationOptions
+        {
+            get; set;
+        }
+
         [Required]
         public ITaskItem[] Wsdls
         {
@@ -70,7 +75,8 @@ namespace ServiceImport.MSBuild
                                                       namespaceMappings,
                                                       typeAccessModifierMappings,
                                                       typeRenameMappings);
-            serviceImporter.ServiceContractGenerationOptions = serviceContractGenerationOptions;
+            serviceImporter.DataContractGenerationOptions = new DataContractGenerationOptionsFactory().Create(DataContractGenerationOptions);
+            serviceImporter.ServiceContractGenerationOptions = new ServiceContractGenerationOptionsFactory().Create(ServiceContractGenerationOptions); ;
 
             serviceImporter.Import(codeWriter);
 

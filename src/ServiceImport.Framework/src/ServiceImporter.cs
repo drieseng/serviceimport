@@ -29,6 +29,8 @@ namespace ServiceImport.Framework
 
         public IDictionary<string, string> NamespaceMappings { get; }
 
+        public DataContractGenerationOptions DataContractGenerationOptions { get; set; }
+
         public ServiceContractGenerationOptions ServiceContractGenerationOptions { get; set; }
 
         public IDictionary<string, TypeAccessModifier> TypeAccessModifiers { get; }
@@ -57,7 +59,10 @@ namespace ServiceImport.Framework
 
             var xsdDataContractImporter = new XsdDataContractImporterFactory().Create(codeProvider, codeCompileUnit, NamespaceMappings);
 
-            var wsdlImporter = new WsdlImporterFactory().Create(new MetadataSet(metadataSections), xsdDataContractImporter, XmlTypeMappings);
+            var wsdlImporter = new WsdlImporterFactory().Create(new MetadataSet(metadataSections),
+                                                                xsdDataContractImporter,
+                                                                XmlTypeMappings,
+                                                                DataContractGenerationOptions);
             var serviceContractGenerator = CreateServiceContractGenerator(codeCompileUnit,
                                                                           NamespaceMappings,
                                                                           ServiceContractGenerationOptions);

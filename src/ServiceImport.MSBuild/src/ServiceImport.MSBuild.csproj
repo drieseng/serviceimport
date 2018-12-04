@@ -36,6 +36,7 @@
       <Link>Properties\VersionInfo.generated.cs</Link>
     </Compile>
     <Compile Include="Factory\CodeGeneratorOptionsFactory.cs" />
+    <Compile Include="Factory\DataContractGenerationOptionsFactory.cs" />
     <Compile Include="Factory\NamespaceMappingFactory.cs" />
     <Compile Include="Factory\ServiceContractGenerationOptionsFactory.cs" />
     <Compile Include="Factory\TypeAccessModifierMappingFactory.cs" />
