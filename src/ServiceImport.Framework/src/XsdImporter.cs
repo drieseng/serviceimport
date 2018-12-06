@@ -57,6 +57,7 @@ namespace ServiceImport.Framework
                     new ComplexTypeElementTypeMappingExtension(serviceModel, XmlTypeMappings),
                     new TypeAccessModifierExtension(TypeAccessModifiers),
                     new TypeRenameExtension(TypeRenameMappings),
+                    new RemoveExtraDataContractNameExtension(),
                     new ComplexTypeOptionalElementsNillableExtension(serviceModel),
                     new EmitDefaultValueExtension(serviceModel),
                     new PascalCaseFieldNamesExtension()

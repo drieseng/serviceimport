@@ -69,7 +69,7 @@ namespace ServiceImport.Framework.Extension
 
         #endregion IDataContractGenerationExtension implementation
 
-        private IEnumerable<ComplexType> GetComplexTypes(XmlSchemaSet xmlSchemas)
+        private static IEnumerable<ComplexType> GetComplexTypes(XmlSchemaSet xmlSchemas)
         {
             foreach (DictionaryEntry globalTypeEntry in xmlSchemas.GlobalTypes)
             {

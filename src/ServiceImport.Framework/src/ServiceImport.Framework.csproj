@@ -51,11 +51,19 @@
     </Compile>
     <Compile Include="CodeDom\TypeAccessModifier.cs" />
     <Compile Include="DataContractGenerationOptions.cs" />
+    <Compile Include="Documentation\CodeDomUtils.cs" />
+    <Compile Include="Documentation\WsdlUtils.cs" />
+    <Compile Include="Documentation\XmlCommentFormat.cs" />
+    <Compile Include="Documentation\XmlCommentImportOptions.cs" />
+    <Compile Include="Documentation\XmlCommentsImporter.cs" />
+    <Compile Include="Documentation\XmlCommentUtils.cs" />
     <Compile Include="Extension\EmitDefaultValueExtension.cs" />
     <Compile Include="Extension\IDataContractGenerationExtension.cs" />
+    <Compile Include="Extension\RemoveExtraDataContractNameExtension.cs" />
     <Compile Include="Extension\TypeAccessModifierExtension.cs" />
     <Compile Include="Extension\TypeRenameExtension.cs" />
     <Compile Include="Extension\IXsdImportExtension.cs" />
+    <Compile Include="Extension\XmlCommentExtension.cs" />
     <Compile Include="Helper\EnumerableExtensions.cs" />
     <Compile Include="Extension\AbstractTypeExtension.cs" />
     <Compile Include="CodeDom\CodeDomExtensions.cs" />

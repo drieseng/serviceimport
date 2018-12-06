@@ -27,7 +27,7 @@ namespace ServiceImport.Framework.Extension
     /// </para>
     /// </summary>
     /// <seealso cref="!:https://msdn.microsoft.com/en-us/library/ms733112.aspx"/>
-    public class AbstractTypeExtension : IServiceContractGenerationExtension, IWsdlImportExtension, IContractBehavior, IXsdImportExtension, IDataContractGenerationExtension
+    public class AbstractTypeExtension : IServiceContractGenerationExtension, IWsdlImportExtension, IContractBehavior, IXsdImportExtension
     {
         private XsdDataContractImporter _xsdDataContractImporter;
         private readonly ServiceModel _serviceModel;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.ServiceModel.Description;
 using System.Xml.Schema;
+using ServiceImport.Framework.Documentation;
 using ServiceImport.Framework.Extension;
 using ServiceImport.Framework.Model;
 
@@ -34,6 +35,7 @@ namespace ServiceImport.Framework.Factory
             wsdlImporter.WsdlImportExtensions.Add(new PascalCaseFieldNamesExtension());
             wsdlImporter.WsdlImportExtensions.Add(new OperationParameterPascalCaseExtension());
             wsdlImporter.WsdlImportExtensions.Add(new OperationContractReplyActionRemovalExtension());
+            wsdlImporter.WsdlImportExtensions.Add(new XmlCommentExtension(serviceModel));
             wsdlImporter.State.Add(typeof(XsdDataContractImporter), xsdDataContractImporter);
             return wsdlImporter;
         }

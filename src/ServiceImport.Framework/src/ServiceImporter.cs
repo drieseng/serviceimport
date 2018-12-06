@@ -39,10 +39,11 @@ namespace ServiceImport.Framework
 
         public void Import(ICodeWriter codeWriter)
         {
-            var dataContractGenerationExtensions = new List<IDataContractGenerationExtension>
+            var dataContractGenerationExtensions = new List<IXsdImportExtension>
                 {
                     new TypeRenameExtension(TypeRenameMappings),
-                    new TypeAccessModifierExtension(TypeAccessModifiers)
+                    new RemoveExtraDataContractNameExtension(),
+                    new TypeAccessModifierExtension(TypeAccessModifiers),
                 };
 
             var codeCompileUnit = new CodeCompileUnit();
@@ -74,7 +75,9 @@ namespace ServiceImport.Framework
                 serviceContractGenerator.GenerateServiceContractType(contract);
 
             foreach (var dataContractGenerationExtension in dataContractGenerationExtensions)
+            {
                 dataContractGenerationExtension.GenerateContract(codeCompileUnit);
+            }
 
             codeWriter.Write(codeProvider, codeCompileUnit);
         }

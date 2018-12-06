@@ -2,6 +2,7 @@
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 
 namespace ServiceImport.Framework.CodeDom
 {
@@ -24,6 +25,50 @@ namespace ServiceImport.Framework.CodeDom
                     yield return type;
                 }
             }
+        }
+
+        public static CodeAttributeDeclaration GetDataContractAttribute(this CodeTypeMember typeMember)
+        {
+            return typeMember.CustomAttributes().SingleOrDefault(p => p.AttributeType.BaseType == typeof(DataContractAttribute).FullName);
+        }
+
+        public static string GetStringValue(this CodeAttributeArgument attributeArgument)
+        {
+            if (attributeArgument.Value == null)
+            {
+                throw new ArgumentException(
+                    $"The value of the {attributeArgument.Name} argument cannot be null.",
+                    nameof(attributeArgument));
+            }
+
+            if (!(attributeArgument.Value is CodePrimitiveExpression primitiveExpression))
+            {
+                throw new ArgumentException(
+                    $"The value of the {attributeArgument.Name} argument should be a primitive expression.",
+                    nameof(attributeArgument));
+            }
+
+            var primitiveValue = primitiveExpression.Value;
+            if (primitiveValue == null)
+            {
+                throw new ArgumentException(
+                    $"The primitive value of the {attributeArgument.Name} argument cannot be null.",
+                    nameof(attributeArgument));
+            }
+
+            if (!(primitiveValue is string name))
+            {
+                throw new ArgumentException(
+                    $"The primitive value of the {attributeArgument.Name} argument should be of type '{typeof(string).FullName}'.",
+                    nameof(attributeArgument));
+            }
+
+            return name;
+        }
+
+        public static IEnumerable<CodeAttributeDeclaration> CustomAttributes(this CodeTypeMember typeMember)
+        {
+            return typeMember.CustomAttributes.Cast<CodeAttributeDeclaration>();
         }
 
         public static IEnumerable<CodeTypeDeclaration> Types(this CodeNamespace @namespace)
@@ -78,6 +123,19 @@ namespace ServiceImport.Framework.CodeDom
                 {
                     if (type.Name == typeName.Type)
                         return type;
+                }
+            }
+
+            return null;
+        }
+
+        public static CodeAttributeArgument FindArgumentByName(this CodeAttributeDeclaration attributeDeclaration, string name)
+        {
+            foreach (CodeAttributeArgument argument in attributeDeclaration.Arguments)
+            {
+                if (argument.Name == name)
+                {
+                    return argument;
                 }
             }
 
