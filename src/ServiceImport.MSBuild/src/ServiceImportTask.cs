@@ -1,18 +1,32 @@
-﻿using System.CodeDom;
+﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Xml;
 using System.Xml.Schema;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using ServiceImport.Framework;
 using ServiceImport.Framework.CodeDom;
+using ServiceImport.Framework.Model;
 using ServiceImport.Framework.Writer;
 using ServiceImport.MSBuild.Factory;
+using ServiceImport.MSBuild.Model;
 
 namespace ServiceImport.MSBuild
 {
     public class ServiceImportTask : Task
     {
         public ITaskItem[] NamespaceMappings
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// Allow fine-grained control over the nillable characteristic of specific elements within
+        /// complex types.
+        /// </summary>
+        public ITaskItem[] NillableOverrides
         {
             get; set;
         }
@@ -64,15 +78,16 @@ namespace ServiceImport.MSBuild
         public override bool Execute()
         {
             var codeGeneratorOptions = new CodeGeneratorOptionsFactory().Create(CodeGeneratorOptions);
-            var serviceContractGenerationOptions = new ServiceContractGenerationOptionsFactory().Create(ServiceContractGenerationOptions);
             var xmlTypeMappings = CreateXmlTypeMappings();
             var namespaceMappings = CreateNamespaceMappings();
             var typeAccessModifierMappings = CreateTypeAccessModifierMappings();
             var typeRenameMappings = CreateTypeRenameMappings();
+            var nillableOverrides = CreateNillableOverrides();
             var codeWriter = new FileSystemCodeWriter(codeGeneratorOptions, OutputDirectory);
             var serviceImporter = new ServiceImporter(GetItemSpecs(Wsdls),
                                                       xmlTypeMappings,
                                                       namespaceMappings,
+                                                      nillableOverrides,
                                                       typeAccessModifierMappings,
                                                       typeRenameMappings);
             serviceImporter.DataContractGenerationOptions = new DataContractGenerationOptionsFactory().Create(DataContractGenerationOptions);
@@ -108,9 +123,39 @@ namespace ServiceImport.MSBuild
             return namespaceMappings;
         }
 
-        private IDictionary<XmlTypeCode, CodeTypeReference> CreateXmlTypeMappings()
+        private Dictionary<XmlQualifiedName, Dictionary<string, NillableOverride>> CreateNillableOverrides()
         {
-            var xmlTypeMappings = new Dictionary<XmlTypeCode, CodeTypeReference>();
+            var overrides = new Dictionary<XmlQualifiedName, Dictionary<string, NillableOverride>>();
+
+            if (NillableOverrides != null)
+            {
+                var factory = new NillableOverrideFactory(new XmlQualifiedNameFactory());
+
+                foreach (var item in NillableOverrides)
+                {
+                    var nillableOverride = factory.Create(item);
+
+                    if (!overrides.TryGetValue(nillableOverride.ComplexTypeName, out var overridesForComplexType))
+                    {
+                        overridesForComplexType = new Dictionary<string, NillableOverride>();
+                        overrides.Add(nillableOverride.ComplexTypeName, overridesForComplexType);
+                    }
+
+                    if (overridesForComplexType.ContainsKey(nillableOverride.ElementName))
+                    {
+                        throw new ArgumentException($"Duplicate nillable override for element '{nillableOverride.ElementName}' in complex type '{nillableOverride.ComplexTypeName}'.");
+                    }
+
+                    overridesForComplexType.Add(nillableOverride.ElementName, nillableOverride);
+                }
+            }
+
+            return overrides;
+        }
+
+        private IDictionary<XmlTypeCode, XmlTypeMapping> CreateXmlTypeMappings()
+        {
+            var xmlTypeMappings = new Dictionary<XmlTypeCode, XmlTypeMapping>();
 
             if (XmlTypeMappings != null)
             {
@@ -126,7 +171,7 @@ namespace ServiceImport.MSBuild
                         continue;
                     }
 
-                    xmlTypeMappings.Add(xmlTypeMapping.XmlTypeCode, xmlTypeMapping.CodeTypeReference);
+                    xmlTypeMappings.Add(xmlTypeMapping.XmlTypeCode, xmlTypeMapping);
                 }
             }
 

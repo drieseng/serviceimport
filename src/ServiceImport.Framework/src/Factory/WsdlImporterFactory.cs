@@ -1,9 +1,8 @@
-﻿using System.CodeDom;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.ServiceModel.Description;
+using System.Xml;
 using System.Xml.Schema;
-using ServiceImport.Framework.Documentation;
 using ServiceImport.Framework.Extension;
 using ServiceImport.Framework.Model;
 
@@ -12,9 +11,10 @@ namespace ServiceImport.Framework.Factory
     public class WsdlImporterFactory : IWsdlImporterFactory
     {
         public WsdlImporter Create(MetadataSet metadataSet,
-                                   XsdDataContractImporter xsdDataContractImporter,
-                                   IDictionary<XmlTypeCode, CodeTypeReference> xmlTypeMappings,
-                                   DataContractGenerationOptions dataContractGenerationOptions)
+            XsdDataContractImporter xsdDataContractImporter,
+            Dictionary<XmlQualifiedName, Dictionary<string, NillableOverride>> nillableOverrides,
+            IDictionary<XmlTypeCode, XmlTypeMapping> xmlTypeMappings,
+            DataContractGenerationOptions dataContractGenerationOptions)
         {
             var serviceModel = new ServiceModel();
 
@@ -29,7 +29,8 @@ namespace ServiceImport.Framework.Factory
                 wsdlImporter.WsdlImportExtensions.Add(new ComplexTypeOptionalElementsNillableExtension(serviceModel));
             }
 
-            wsdlImporter.WsdlImportExtensions.Add(new EmitDefaultValueExtension(serviceModel));
+            wsdlImporter.WsdlImportExtensions.Add(new NillableOverrideExtension(serviceModel, nillableOverrides));
+            wsdlImporter.WsdlImportExtensions.Add(new EmitDefaultValueExtension(serviceModel, xmlTypeMappings));
             wsdlImporter.WsdlImportExtensions.Add(new AbstractTypeExtension(serviceModel));
             wsdlImporter.WsdlImportExtensions.Add(new OperationParameterTypeMappingExtension(xmlTypeMappings));
             wsdlImporter.WsdlImportExtensions.Add(new PascalCaseFieldNamesExtension());

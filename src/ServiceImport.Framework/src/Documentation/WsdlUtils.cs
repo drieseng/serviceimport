@@ -33,7 +33,7 @@ namespace ServiceImport.Framework.Documentation
                 if (documentation != null)
                 {
                     string uniqueName = GetUniqueName(schemaObj);
-                    Console.WriteLine("NAME = " + uniqueName + " | " + documentation);
+                    //Console.WriteLine("NAME = " + uniqueName + " | " + documentation);
                     documentedItems[uniqueName] = documentation;
                 }
                 EnumerateDocumentedItems(schemaObj, documentedItems);

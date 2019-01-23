@@ -15,7 +15,7 @@ namespace ServiceImport.Framework
 {
     public class XsdImporter
     {
-        public XsdImporter(string xsd, IDictionary<XmlTypeCode, CodeTypeReference> xmlTypeMappings, IDictionary<string, string> namespaceMappings, IDictionary<string, TypeAccessModifier> typeAccessModifiers, IDictionary<string, string> typeRenameMappings)
+        public XsdImporter(string xsd, IDictionary<XmlTypeCode, XmlTypeMapping> xmlTypeMappings, IDictionary<string, string> namespaceMappings, IDictionary<string, TypeAccessModifier> typeAccessModifiers, IDictionary<string, string> typeRenameMappings)
         {
             Xsd = xsd;
             XmlTypeMappings = xmlTypeMappings;
@@ -26,7 +26,7 @@ namespace ServiceImport.Framework
 
         public string Xsd { get; }
 
-        public IDictionary<XmlTypeCode, CodeTypeReference> XmlTypeMappings
+        public IDictionary<XmlTypeCode, XmlTypeMapping> XmlTypeMappings
         {
             get; private set;
         }
@@ -59,7 +59,7 @@ namespace ServiceImport.Framework
                     new TypeRenameExtension(TypeRenameMappings),
                     new RemoveExtraDataContractNameExtension(),
                     new ComplexTypeOptionalElementsNillableExtension(serviceModel),
-                    new EmitDefaultValueExtension(serviceModel),
+                    new EmitDefaultValueExtension(serviceModel, XmlTypeMappings),
                     new PascalCaseFieldNamesExtension()
                 };
 

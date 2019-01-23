@@ -56,11 +56,11 @@ namespace ServiceImport.Framework.Extension
 
         public void GenerateContract(CodeCompileUnit compileUnit)
         {
-            Console.WriteLine("IN GENERATE CONTRACT");
+            //Console.WriteLine("IN GENERATE CONTRACT");
 
             foreach (var ns in compileUnit.Namespaces())
             {
-                Console.WriteLine("CODEDOM NS = " + ns.Name);
+                //Console.WriteLine("CODEDOM NS = " + ns.Name);
 
                 foreach (var typeDeclaration in ns.Types())
                 {
@@ -70,7 +70,7 @@ namespace ServiceImport.Framework.Extension
                         continue;
                     }
 
-                    Console.WriteLine("\tCODEDOM TYPE = " + typeDeclaration.Name);
+                    //Console.WriteLine("\tCODEDOM TYPE = " + typeDeclaration.Name);
 
 
                     var schemaType = GetSchemaType(qualifiedName);
@@ -143,7 +143,7 @@ namespace ServiceImport.Framework.Extension
 
             if (simpleType.Content is XmlSchemaSimpleTypeRestriction restriction)
             {
-                Console.WriteLine("\t\t" + simpleType.Name);
+                //Console.WriteLine("\t\t" + simpleType.Name);
 
                 foreach (var facet in restriction.Facets)
                 {
@@ -152,7 +152,7 @@ namespace ServiceImport.Framework.Extension
                         var xmlComment = GetDocumentation(enumeration.Annotation);
                         if (xmlComment != null)
                         {
-                            Console.WriteLine("\t\t\t" + simpleType.Name + " | " + enumeration.Value + " | " + xmlComment);
+                            //Console.WriteLine("\t\t\t" + simpleType.Name + " | " + enumeration.Value + " | " + xmlComment);
                             docByMember.Add(enumeration.Value, xmlComment);
                         }
                     }

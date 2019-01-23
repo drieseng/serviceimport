@@ -19,7 +19,7 @@ namespace ServiceImport.Framework.Extension
     /// This is done to ensure the types of corresponding properties in the generated code are nullable in case
     /// of value types.
     /// </remarks>
-    public class ComplexTypeOptionalElementsNillableExtension : IWsdlImportExtension, IContractBehavior, IXsdImportExtension
+    public class ComplexTypeOptionalElementsNillableExtension : IWsdlImportExtension, IServiceContractGenerationExtension, IContractBehavior, IXsdImportExtension
     {
         private const string SerializationArraysNamespace = "http://schemas.microsoft.com/2003/10/Serialization/Arrays";
 
@@ -106,6 +106,10 @@ namespace ServiceImport.Framework.Extension
                     }
                 }
             }
+        }
+
+        void IServiceContractGenerationExtension.GenerateContract(ServiceContractGenerationContext context)
+        {
         }
     }
 }

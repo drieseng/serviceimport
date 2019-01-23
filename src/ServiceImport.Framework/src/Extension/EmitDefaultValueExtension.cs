@@ -34,11 +34,13 @@ namespace ServiceImport.Framework.Extension
     public class EmitDefaultValueExtension : IWsdlImportExtension, IServiceContractGenerationExtension, IContractBehavior, IXsdImportExtension
     {
         private readonly ServiceModel _serviceModel;
+        private readonly IDictionary<XmlTypeCode, XmlTypeMapping> _xmlTypeMappings;
         private XsdDataContractImporter _xsdDataContractImporter;
 
-        public EmitDefaultValueExtension(ServiceModel serviceModel)
+        public EmitDefaultValueExtension(ServiceModel serviceModel, IDictionary<XmlTypeCode, XmlTypeMapping> xmlTypeMappings)
         {
             _serviceModel = serviceModel;
+            _xmlTypeMappings = xmlTypeMappings;
         }
 
         #region IWsdlImportExtension implementation
@@ -134,7 +136,8 @@ namespace ServiceImport.Framework.Extension
                     if (dataMemberAttribute == null)
                         continue;
 
-                    var emitDefaultValue = IsRequired(dataMemberAttribute) && IsStructOrEnum(compileUnit, property.Type.BaseType);
+                    var emitDefaultValue = IsRequired(dataMemberAttribute) &&
+                                           !ConsiderDefaultValueForTypeAsNoValue(compileUnit, _xmlTypeMappings, property.Type.BaseType);
 
                     var emitDefaultValueArgument = dataMemberAttribute.Arguments.SingleOrDefault<CodeAttributeArgument>(p => p.Name == nameof(DataMemberAttribute.EmitDefaultValue));
                     if (emitDefaultValueArgument == null)
@@ -175,66 +178,66 @@ namespace ServiceImport.Framework.Extension
             throw new ArgumentException($"The primitive value of '{nameof(DataMemberAttribute.IsRequired)}' should be of type '{typeof(bool).FullName}'.", nameof(dataMemberAttribute));
         }
 
-        private static bool IsStructOrEnum(CodeCompileUnit compileUnit, string typeName)
+        private static bool ConsiderDefaultValueForTypeAsNoValue(CodeCompileUnit compileUnit, IDictionary<XmlTypeCode, XmlTypeMapping> xmlTypeMappings, string typeName)
         {
             if (typeName == typeof(short).FullName)
             {
-                return true;
+                return false;
             }
 
             if (typeName == typeof(int).FullName)
             {
-                return true;
+                return false;
             }
 
             if (typeName == typeof(long).FullName)
             {
-                return true;
+                return false;
             }
 
             if (typeName == typeof(float).FullName)
             {
-                return true;
+                return false;
             }
 
             if (typeName == typeof(ushort).FullName)
             {
-                return true;
+                return false;
             }
 
             if (typeName == typeof(uint).FullName)
             {
-                return true;
+                return false;
             }
 
             if (typeName == typeof(ulong).FullName)
             {
-                return true;
+                return false;
             }
 
             if (typeName == typeof(decimal).FullName)
             {
-                return true;
+                return false;
             }
 
             if (typeName == typeof(bool).FullName)
             {
-                return true;
+                return false;
             }
 
             if (typeName == typeof(DateTime).FullName)
             {
-                return true;
+                return false;
             }
 
             if (typeName == typeof(Guid).FullName)
             {
-                return true;
+                return false;
             }
 
             if (typeName == typeof(TimeSpan).FullName)
             {
-                return true;
+                return false;
             }
 
             if (typeName == typeof(string).FullName)
@@ -244,18 +247,24 @@ namespace ServiceImport.Framework.Extension
 
             if (typeName == "System.Collections.Generic.Dictionary`2")
             {
-                return false;
+                return true;
             }
 
             if (typeName == "System.Collections.Generic.List`1")
             {
-                return false;
+                return true;
             }
 
             var typeDeclaration = compileUnit.FindTypeDeclaration(typeName);
             if (typeDeclaration == null)
             {
-                throw new Exception($"Unable to determine whether '{typeName}' is a struct or enum.");
+                var typeMapping = FindTypeMapping(xmlTypeMappings, typeName);
+                if (typeMapping == null)
+                {
+                    throw new Exception($"Unable to determine whether '{typeName}' is a struct or enum.");
+                }
+
+                return !(typeMapping.IsStruct || typeMapping.IsEnum);
             }
 
             if (typeDeclaration.IsEnum)
@@ -266,9 +275,11 @@ namespace ServiceImport.Framework.Extension
                     {
                         if (primitiveExpression.Value is long longValue)
                         {
+                            // If one of the values defined by the num has value zero, then we consider the
+                            // default value as meaningful
                             if (longValue == 0L)
                             {
-                                return true;
+                                return false;
                             }
                         }
                         else
@@ -282,6 +293,19 @@ namespace ServiceImport.Framework.Extension
             }
 
             return typeDeclaration.IsStruct;
+        }
+
+        private static XmlTypeMapping FindTypeMapping(IDictionary<XmlTypeCode, XmlTypeMapping> xmlTypeMappings, string typeName)
+        {
+            foreach (var xmlTypeMapping in xmlTypeMappings.Values)
+            {
+                if (xmlTypeMapping.CodeTypeReference.BaseType == typeName)
+                {
+                    return xmlTypeMapping;
+                }
+            }
+
+            return null;
         }
     }
 }

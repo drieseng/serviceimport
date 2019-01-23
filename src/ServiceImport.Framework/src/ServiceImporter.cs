@@ -2,32 +2,38 @@
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.ServiceModel.Description;
+using System.Xml;
 using System.Xml.Schema;
 using Microsoft.CSharp;
 using ServiceImport.Framework.CodeDom;
 using ServiceImport.Framework.Extension;
 using ServiceImport.Framework.Factory;
 using ServiceImport.Framework.Helper;
+using ServiceImport.Framework.Model;
 using ServiceImport.Framework.Writer;
 
 namespace ServiceImport.Framework
 {
     public class ServiceImporter
     {
-        public ServiceImporter(string[] wsdls, IDictionary<XmlTypeCode, CodeTypeReference> xmlTypeMappings, IDictionary<string, string> namespaceMappings, IDictionary<string, TypeAccessModifier> typeAccessModifiers, IDictionary<string, string> typeRenameMappings)
+        public ServiceImporter(string[] wsdls, IDictionary<XmlTypeCode, XmlTypeMapping> xmlTypeMappings,
+            IDictionary<string, string> namespaceMappings, Dictionary<XmlQualifiedName, Dictionary<string, NillableOverride>> nillableOverrides,
+            IDictionary<string, TypeAccessModifier> typeAccessModifiers, IDictionary<string, string> typeRenameMappings)
         {
             Wsdls = wsdls;
             XmlTypeMappings = xmlTypeMappings;
             NamespaceMappings = namespaceMappings;
+            NillableOverrides = nillableOverrides;
             TypeAccessModifiers = typeAccessModifiers;
             TypeRenameMappings = typeRenameMappings;
         }
 
         public string[] Wsdls { get; }
 
-        public IDictionary<XmlTypeCode, CodeTypeReference> XmlTypeMappings { get; }
+        public IDictionary<XmlTypeCode, XmlTypeMapping> XmlTypeMappings { get; }
 
         public IDictionary<string, string> NamespaceMappings { get; }
+        public Dictionary<XmlQualifiedName, Dictionary<string, NillableOverride>> NillableOverrides { get; }
 
         public DataContractGenerationOptions DataContractGenerationOptions { get; set; }
 
@@ -62,6 +68,7 @@ namespace ServiceImport.Framework
 
             var wsdlImporter = new WsdlImporterFactory().Create(new MetadataSet(metadataSections),
                                                                 xsdDataContractImporter,
+                                                                NillableOverrides,
                                                                 XmlTypeMappings,
                                                                 DataContractGenerationOptions);
             var serviceContractGenerator = CreateServiceContractGenerator(codeCompileUnit,

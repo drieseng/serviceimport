@@ -1,12 +1,16 @@
 ﻿using System.CodeDom;
 using System.Xml.Schema;
 
-namespace ServiceImport.MSBuild.Model
+namespace ServiceImport.Framework.Model
 {
-    internal class XmlTypeMapping
+    public class XmlTypeMapping
     {
         public XmlTypeCode XmlTypeCode { get; set; }
 
         public CodeTypeReference CodeTypeReference { get; set; }
+
+        public bool IsStruct { get; set; }
+
+        public bool IsEnum { get; set; }
     }
 }

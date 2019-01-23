@@ -18,10 +18,10 @@ namespace ServiceImport.Framework.Extension
     public class ComplexTypeElementTypeMappingExtension : IServiceContractGenerationExtension, IWsdlImportExtension, IContractBehavior, IXsdImportExtension
     {
         private XsdDataContractImporter _xsdDataContractImporter;
-        private readonly IDictionary<XmlTypeCode, CodeTypeReference> _xmlTypeMapping;
+        private readonly IDictionary<XmlTypeCode, XmlTypeMapping> _xmlTypeMapping;
         private readonly ServiceModel _serviceModel;
 
-        public ComplexTypeElementTypeMappingExtension(ServiceModel serviceModel, IDictionary<XmlTypeCode, CodeTypeReference> xmlTypeMapping)
+        public ComplexTypeElementTypeMappingExtension(ServiceModel serviceModel, IDictionary<XmlTypeCode, XmlTypeMapping> xmlTypeMapping)
         {
             _serviceModel = serviceModel;
             _xmlTypeMapping = xmlTypeMapping;
@@ -128,16 +128,16 @@ namespace ServiceImport.Framework.Extension
                     if (element.MaxOccurs != 1)
                         continue;
 
-                    if (!_xmlTypeMapping.TryGetValue(element.TypeCode, out var elementTypeReference))
+                    if (!_xmlTypeMapping.TryGetValue(element.TypeCode, out var elementTypeMapping))
                         continue;
 
                     if (element.MinOccurs == 0)
                     {
-                        property.Type = elementTypeReference.ToNullable();
+                        property.Type = elementTypeMapping.CodeTypeReference.ToNullable();
                     }
                     else
                     {
-                        property.Type = elementTypeReference;
+                        property.Type = elementTypeMapping.CodeTypeReference;
                     }
 
                     if (property.GetStatements[0] is CodeMethodReturnStatement returnStatement && returnStatement.Expression != null)

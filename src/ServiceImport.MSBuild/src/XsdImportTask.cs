@@ -1,10 +1,10 @@
-﻿using System.CodeDom;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Xml.Schema;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using ServiceImport.Framework;
 using ServiceImport.Framework.CodeDom;
+using ServiceImport.Framework.Model;
 using ServiceImport.Framework.Writer;
 using ServiceImport.MSBuild.Factory;
 
@@ -84,9 +84,9 @@ namespace ServiceImport.MSBuild
             return namespaceMappings;
         }
 
-        private IDictionary<XmlTypeCode, CodeTypeReference> CreateXmlTypeMappings()
+        private IDictionary<XmlTypeCode, XmlTypeMapping> CreateXmlTypeMappings()
         {
-            var xmlTypeMappings = new Dictionary<XmlTypeCode, CodeTypeReference>();
+            var xmlTypeMappings = new Dictionary<XmlTypeCode, XmlTypeMapping>();
 
             if (XmlTypeMappings != null)
             {
@@ -95,7 +95,7 @@ namespace ServiceImport.MSBuild
                 foreach (var item in XmlTypeMappings)
                 {
                     var xmlTypeMapping = xmlTypeMappingFactory.Create(item);
-                    xmlTypeMappings.Add(xmlTypeMapping.XmlTypeCode, xmlTypeMapping.CodeTypeReference);
+                    xmlTypeMappings.Add(xmlTypeMapping.XmlTypeCode, xmlTypeMapping);
                 }
             }
 

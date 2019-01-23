@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ServiceModel.Description;
 using Microsoft.Build.Framework;
 using ServiceImport.Framework;
 
