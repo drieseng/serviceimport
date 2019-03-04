@@ -258,9 +258,23 @@ namespace ServiceImport.Framework.Helper
                     return true;
                 case XmlTypeCode.Int:
                     return false;
+                case XmlTypeCode.Long:
+                    return false;
                 case XmlTypeCode.Integer:
                     return false;
                 case XmlTypeCode.DateTime:
+                    return false;
+                case XmlTypeCode.Double:
+                    return false;
+                case XmlTypeCode.Decimal:
+                    return false;
+                case XmlTypeCode.Float:
+                    return false;
+                case XmlTypeCode.NonNegativeInteger:
+                    return false;
+                case XmlTypeCode.PositiveInteger:
+                    return false;
+                case XmlTypeCode.NonPositiveInteger:
                     return false;
                 case XmlTypeCode.Boolean:
                     return false;
