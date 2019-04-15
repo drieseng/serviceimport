@@ -15,16 +15,16 @@ namespace ServiceImport.Framework
 {
     public class XsdImporter
     {
-        public XsdImporter(string xsd, IDictionary<XmlTypeCode, XmlTypeMapping> xmlTypeMappings, IDictionary<string, string> namespaceMappings, IDictionary<string, TypeAccessModifier> typeAccessModifiers, IDictionary<string, string> typeRenameMappings)
+        public XsdImporter(string[] xsds, IDictionary<XmlTypeCode, XmlTypeMapping> xmlTypeMappings, IDictionary<string, string> namespaceMappings, IDictionary<string, TypeAccessModifier> typeAccessModifiers, IDictionary<string, string> typeRenameMappings)
         {
-            Xsd = xsd;
+            Xsds = xsds;
             XmlTypeMappings = xmlTypeMappings;
             NamespaceMappings = namespaceMappings;
             TypeAccessModifiers = typeAccessModifiers;
             TypeRenameMappings = typeRenameMappings;
         }
 
-        public string Xsd { get; }
+        public string[] Xsds { get; }
 
         public IDictionary<XmlTypeCode, XmlTypeMapping> XmlTypeMappings
         {
@@ -60,6 +60,7 @@ namespace ServiceImport.Framework
                     new RemoveExtraDataContractNameExtension(),
                     new ComplexTypeOptionalElementsNillableExtension(serviceModel),
                     new EmitDefaultValueExtension(serviceModel, XmlTypeMappings),
+                    new AbstractTypeExtension(serviceModel),
                     new PascalCaseFieldNamesExtension()
                 };
 
@@ -85,13 +86,13 @@ namespace ServiceImport.Framework
             codeWriter.Write(codeProvider, codeCompileUnit);
         }
 
-        private static XmlSchemaSet CreateXmlSchemaSet(MetadataSet metadataSet)
+        private static XmlSchemaSet CreateXmlSchemaSet(List<MetadataSection> metadataSections)
         {
             var xmlSchemaSet = new XmlSchemaSet();
 
-            foreach (var section in metadataSet.MetadataSections)
-            {
-                var xmlSchema = section.Metadata as XmlSchema;
+            foreach (var metadataSection in metadataSections)
+            { 
+                var xmlSchema = metadataSection.Metadata as XmlSchema;
                 if (xmlSchema == null)
                     continue;
 
@@ -108,8 +109,16 @@ namespace ServiceImport.Framework
 
         private ServiceModel CreateServiceModel()
         {
-            var metadataSet = new MetadataDiscovery().Discover(Xsd);
-            var schemaSet = CreateXmlSchemaSet(metadataSet);
+            var discovery = new MetadataDiscovery();
+            var metadataSections = new List<MetadataSection>();
+
+            foreach (var xsd in Xsds)
+            {
+                var metadataSet = discovery.Discover(xsd);
+                metadataSections.AddRange(metadataSet.MetadataSections);
+
+            }
+            var schemaSet = CreateXmlSchemaSet(metadataSections);
             return new ServiceModel { XmlSchemas = schemaSet };
         }
 

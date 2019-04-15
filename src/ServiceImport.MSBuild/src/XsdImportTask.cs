@@ -6,6 +6,7 @@ using ServiceImport.Framework;
 using ServiceImport.Framework.CodeDom;
 using ServiceImport.Framework.Model;
 using ServiceImport.Framework.Writer;
+using ServiceImport.MSBuild.Extension;
 using ServiceImport.MSBuild.Factory;
 
 namespace ServiceImport.MSBuild
@@ -40,7 +41,7 @@ namespace ServiceImport.MSBuild
         }
 
         [Required]
-        public string Xsd
+        public ITaskItem[] Xsds
         {
             get; set;
         }
@@ -59,7 +60,11 @@ namespace ServiceImport.MSBuild
             var typeAccessModifierMappings = CreateTypeAccessModifierMappings();
             var typeRenameMappings = CreateTypeRenameMappings();
             var codeWriter = new FileSystemCodeWriter(codeGeneratorOptions, OutputDirectory);
-            var xsdImporter = new XsdImporter(Xsd, xmlTypeMappings, namespaceMappings, typeAccessModifierMappings, typeRenameMappings);
+            var xsdImporter = new XsdImporter(Xsds.ToStringArray(),
+                                              xmlTypeMappings,
+                                              namespaceMappings,
+                                              typeAccessModifierMappings,
+                                              typeRenameMappings);
 
             xsdImporter.Import(codeWriter);
 

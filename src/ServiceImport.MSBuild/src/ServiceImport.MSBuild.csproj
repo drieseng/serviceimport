@@ -35,6 +35,7 @@
     <Compile Include="..\..\VersionInfo.generated.cs">
       <Link>Properties\VersionInfo.generated.cs</Link>
     </Compile>
+    <Compile Include="Extension\TaskItemExtensions.cs" />
     <Compile Include="Factory\CodeGeneratorOptionsFactory.cs" />
     <Compile Include="Factory\DataContractGenerationOptionsFactory.cs" />
     <Compile Include="Factory\NamespaceMappingFactory.cs" />

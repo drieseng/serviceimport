@@ -1,7 +1,5 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Xml;
 using System.Xml.Schema;
 using Microsoft.Build.Framework;
@@ -10,8 +8,8 @@ using ServiceImport.Framework;
 using ServiceImport.Framework.CodeDom;
 using ServiceImport.Framework.Model;
 using ServiceImport.Framework.Writer;
+using ServiceImport.MSBuild.Extension;
 using ServiceImport.MSBuild.Factory;
-using ServiceImport.MSBuild.Model;
 
 namespace ServiceImport.MSBuild
 {
@@ -84,7 +82,7 @@ namespace ServiceImport.MSBuild
             var typeRenameMappings = CreateTypeRenameMappings();
             var nillableOverrides = CreateNillableOverrides();
             var codeWriter = new FileSystemCodeWriter(codeGeneratorOptions, OutputDirectory);
-            var serviceImporter = new ServiceImporter(GetItemSpecs(Wsdls),
+            var serviceImporter = new ServiceImporter(Wsdls.ToStringArray(),
                                                       xmlTypeMappings,
                                                       namespaceMappings,
                                                       nillableOverrides,
@@ -226,18 +224,6 @@ namespace ServiceImport.MSBuild
             }
 
             return typeRenameMappings;
-        }
-
-        private static string[] GetItemSpecs(ITaskItem[] taskItems)
-        {
-            var itemSpecs = new string[taskItems.Length];
-            for (var i = 0; i < taskItems.Length; i++)
-            {
-                var taskItem = taskItems[i];
-                itemSpecs[i] = taskItem.ItemSpec;
-            }
-
-            return itemSpecs;
         }
     }
 }
