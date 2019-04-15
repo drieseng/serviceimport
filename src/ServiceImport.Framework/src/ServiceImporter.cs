@@ -16,9 +16,12 @@ namespace ServiceImport.Framework
 {
     public class ServiceImporter
     {
-        public ServiceImporter(string[] wsdls, IDictionary<XmlTypeCode, XmlTypeMapping> xmlTypeMappings,
-            IDictionary<string, string> namespaceMappings, Dictionary<XmlQualifiedName, Dictionary<string, NillableOverride>> nillableOverrides,
-            IDictionary<string, TypeAccessModifier> typeAccessModifiers, IDictionary<string, string> typeRenameMappings)
+        public ServiceImporter(string[] wsdls,
+                               IDictionary<XmlTypeCode, XmlTypeMapping> xmlTypeMappings,
+                               IDictionary<string, string> namespaceMappings,
+                               Dictionary<XmlQualifiedName, Dictionary<string, NillableOverride>> nillableOverrides,
+                               IDictionary<string, TypeAccessModifier> typeAccessModifiers,
+                               IDictionary<string, string> typeRenameMappings)
         {
             Wsdls = wsdls;
             XmlTypeMappings = xmlTypeMappings;
@@ -103,8 +106,12 @@ namespace ServiceImport.Framework
                 {
                     Options = serviceContractGenerationOptions
                 };
+
             foreach (var namespaceMapping in namespaceMappings)
+            {
                 gen.NamespaceMappings.Add(namespaceMapping.Key, namespaceMapping.Value);
+            }
+
             return gen;
         }
     }
