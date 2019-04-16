@@ -119,6 +119,40 @@ namespace ServiceImport.Framework.CodeDom
                 if (ns.Name != typeName.Namespace)
                     continue;
 
+                var nameParts = typeName.Type.Split('+');
+                foreach (CodeTypeDeclaration type in ns.Types)
+                {
+                    if (type.Name != nameParts[0])
+                    {
+                        continue;
+                    }
+
+                    if (nameParts.Length == 1)
+                    {
+                        return type;
+                    }
+
+                    var namesQueue = new Queue<string>(nameParts);
+                    namesQueue.Dequeue();
+
+                    var parentType = type;
+
+                    while (namesQueue.Count > 0)
+                    {
+                        var childTypeName = namesQueue.Dequeue();
+
+                        var nestedType = parentType.FindNestedTypeDeclaration(childTypeName);
+                        if (nestedType == null)
+                        {
+                            return null;
+                        }
+
+                        parentType = nestedType;
+                    }
+
+                    return parentType;
+                }
+
                 foreach (CodeTypeDeclaration type in ns.Types)
                 {
                     if (type.Name == typeName.Type)
@@ -128,6 +162,20 @@ namespace ServiceImport.Framework.CodeDom
 
             return null;
         }
+
+        public static CodeTypeDeclaration FindNestedTypeDeclaration(this CodeTypeDeclaration typeClaration, string typeName)
+        {
+            foreach (CodeTypeMember typeMember in typeClaration.Members)
+            {
+                if (typeMember is CodeTypeDeclaration nestedType && nestedType.Name == typeName)
+                {
+                    return nestedType;
+                }
+            }
+
+            return null;
+        }
+
 
         public static CodeAttributeArgument FindArgumentByName(this CodeAttributeDeclaration attributeDeclaration, string name)
         {
