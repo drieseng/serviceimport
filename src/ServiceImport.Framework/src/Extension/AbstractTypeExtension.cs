@@ -93,6 +93,7 @@ namespace ServiceImport.Framework.Extension
 
         void IXsdImportExtension.BeforeImport(XmlSchemaSet xmlSchemaSet)
         {
+            UnsetIsAbstractFlagOnGlobalComplexType(_serviceModel.XmlSchemas);
         }
 
         /// <summary>Called when importing a contract.</summary>
