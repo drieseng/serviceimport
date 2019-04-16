@@ -101,6 +101,7 @@ namespace ServiceImport.Framework.Extension
 
         void IXsdImportExtension.ImportContract(XsdDataContractImporter importer)
         {
+            _xsdDataContractImporter = importer;
         }
 
         #endregion IXsdImportExtension implementation
