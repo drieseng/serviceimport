@@ -61,6 +61,7 @@
     <Compile Include="Extension\EmitDefaultValueExtension.cs" />
     <Compile Include="Extension\IDataContractGenerationExtension.cs" />
     <Compile Include="Extension\RemoveExtraDataContractNameExtension.cs" />
+    <Compile Include="Extension\RemoveServiceContractConfigurationNameExtension.cs" />
     <Compile Include="Extension\TypeAccessModifierExtension.cs" />
     <Compile Include="Extension\TypeRenameExtension.cs" />
     <Compile Include="Extension\IXsdImportExtension.cs" />

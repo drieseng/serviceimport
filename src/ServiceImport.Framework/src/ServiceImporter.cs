@@ -53,6 +53,7 @@ namespace ServiceImport.Framework
                     new TypeRenameExtension(TypeRenameMappings),
                     new RemoveExtraDataContractNameExtension(),
                     new TypeAccessModifierExtension(TypeAccessModifiers),
+                    new RemoveServiceContractConfigurationNameExtension()
                 };
 
             var codeCompileUnit = new CodeCompileUnit();

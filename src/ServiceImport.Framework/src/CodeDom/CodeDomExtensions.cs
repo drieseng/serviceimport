@@ -163,9 +163,22 @@ namespace ServiceImport.Framework.CodeDom
             return null;
         }
 
-        public static CodeTypeDeclaration FindNestedTypeDeclaration(this CodeTypeDeclaration typeClaration, string typeName)
+        public static CodeAttributeArgument FindArgumentByName(this CodeAttributeArgumentCollection arguments, string name)
         {
-            foreach (CodeTypeMember typeMember in typeClaration.Members)
+            foreach (CodeAttributeArgument argument in arguments)
+            {
+                if (argument.Name == name)
+                {
+                    return argument;
+                }
+            }
+
+            return null;
+        }
+
+        public static CodeTypeDeclaration FindNestedTypeDeclaration(this CodeTypeDeclaration typeDeclaration, string typeName)
+        {
+            foreach (CodeTypeMember typeMember in typeDeclaration.Members)
             {
                 if (typeMember is CodeTypeDeclaration nestedType && nestedType.Name == typeName)
                 {
