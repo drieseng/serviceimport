@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Xml.Schema;
 using ServiceImport.Framework;
 using ServiceImport.Framework.CodeDom;
+using ServiceImport.Framework.Model;
 using ServiceImport.Framework.Writer;
 
 namespace ServiceImport.Console
@@ -19,7 +20,7 @@ namespace ServiceImport.Console
             var typeAccessModifierMappings = CreateTypeAccessModifierMappings();
             var typeRenameMappings = CreateTypeRenameMappings();
             var codeWriter = new FileSystemCodeWriter(codeGeneratorOptions, "c:\\temp");
-            var xsdImporter = new XsdImporter(@"C:\TFS2010\A204-NIS\Contracts\A1403\Current\src\Schemas\content\Contracts\A1403\ProductionPoints_v1.xsd", xmlTypeMappings, namespaceMappings, typeAccessModifierMappings, typeRenameMappings);
+            var xsdImporter = new XsdImporter(new[] {@"C:\TFS2010\A204-NIS\Contracts\A1403\Current\src\Schemas\content\Contracts\A1403\ProductionPoints_v1.xsd"}, xmlTypeMappings, namespaceMappings, typeAccessModifierMappings, typeRenameMappings);
 
             xsdImporter.Import(codeWriter);
 
@@ -54,11 +55,16 @@ namespace ServiceImport.Console
             };
         }
 
-        private static IDictionary<XmlTypeCode, CodeTypeReference> CreateXmlTypeMappings()
+        private static IDictionary<XmlTypeCode, XmlTypeMapping> CreateXmlTypeMappings()
         {
-            return new Dictionary<XmlTypeCode, CodeTypeReference>
+            return new Dictionary<XmlTypeCode, XmlTypeMapping>
             {
-                { XmlTypeCode.Date, new CodeTypeReference("BRail.Nis.GeneralLib.ContractEntities.Date") }
+                {
+                    XmlTypeCode.Date, new XmlTypeMapping
+                    {
+                        CodeTypeReference = new CodeTypeReference("BRail.Nis.GeneralLib.ContractEntities.Date")
+                    }
+                }
             };
         }
 
