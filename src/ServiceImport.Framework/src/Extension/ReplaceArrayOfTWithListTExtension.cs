@@ -33,8 +33,6 @@ namespace ServiceImport.Framework.Extension
 
             foreach (CodeNamespace ns in compileUnit.Namespaces)
             {
-                var typeCount = ns.Types.Count;
-
                 for (var i = (ns.Types.Count - 1); i >= 0; i--)
                 {
                     var typeDeclaration = ns.Types[i];
@@ -46,8 +44,6 @@ namespace ServiceImport.Framework.Extension
                         continue;
 
                     new CodeTypeReference().BaseType = ns.Name + "." + typeDeclaration.Name;
-
-                    Console.WriteLine(typeDeclaration.Name);
 
                     var baseType = typeDeclaration.BaseTypes[0];
 
