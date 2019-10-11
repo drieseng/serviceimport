@@ -112,7 +112,20 @@ namespace ServiceImport.Framework.CodeDom
             return nullable;
         }
 
-        public static CodeTypeDeclaration FindTypeDeclaration(this CodeCompileUnit compileUnit, CodeTypeName typeName)
+        public static CodeTypeMember FindMember(this CodeTypeDeclaration typeDeclaration, string memberName)
+        {
+            foreach (CodeTypeMember member in typeDeclaration.Members)
+            {
+                if (member.Name == memberName)
+                {
+                    return member;
+                }
+            }
+
+            return null;
+        }
+
+            public static CodeTypeDeclaration FindTypeDeclaration(this CodeCompileUnit compileUnit, CodeTypeName typeName)
         {
             foreach (CodeNamespace ns in compileUnit.Namespaces)
             {

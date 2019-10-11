@@ -57,6 +57,7 @@
     <Compile Include="Documentation\XmlCommentImportOptions.cs" />
     <Compile Include="Documentation\XmlCommentsImporter.cs" />
     <Compile Include="Documentation\XmlCommentUtils.cs" />
+    <Compile Include="Extension\IsRequiredMemberOverrideExtension.cs" />
     <Compile Include="Extension\NillableOverrideExtension.cs" />
     <Compile Include="Extension\EmitDefaultValueExtension.cs" />
     <Compile Include="Extension\IDataContractGenerationExtension.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Extension\OperationContractReplyActionRemovalExtension.cs" />
     <Compile Include="Helper\XmlSchemaExtensions.cs" />
     <Compile Include="Model\NillableOverride.cs" />
+    <Compile Include="Model\IsRequiredMemberOverride.cs" />
     <Compile Include="Model\XmlTypeMapping.cs" />
     <Compile Include="Writer\FileSystemCodeWriter.cs" />
     <Compile Include="Writer\ICodeWriter.cs" />

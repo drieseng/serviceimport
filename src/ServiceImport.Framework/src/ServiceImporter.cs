@@ -17,16 +17,18 @@ namespace ServiceImport.Framework
     public class ServiceImporter
     {
         public ServiceImporter(string[] wsdls,
-                               IDictionary<XmlTypeCode, XmlTypeMapping> xmlTypeMappings,
-                               IDictionary<string, string> namespaceMappings,
-                               Dictionary<XmlQualifiedName, Dictionary<string, NillableOverride>> nillableOverrides,
-                               IDictionary<string, TypeAccessModifier> typeAccessModifiers,
-                               IDictionary<string, string> typeRenameMappings)
+            IDictionary<XmlTypeCode, XmlTypeMapping> xmlTypeMappings,
+            IDictionary<string, string> namespaceMappings,
+            Dictionary<XmlQualifiedName, Dictionary<string, NillableOverride>> nillableOverrides,
+            List<IsRequiredMemberOverride> requiredMemberOverrides,
+            IDictionary<string, TypeAccessModifier> typeAccessModifiers,
+            IDictionary<string, string> typeRenameMappings)
         {
             Wsdls = wsdls;
             XmlTypeMappings = xmlTypeMappings;
             NamespaceMappings = namespaceMappings;
             NillableOverrides = nillableOverrides;
+            RequiredMemberOverrides = requiredMemberOverrides;
             TypeAccessModifiers = typeAccessModifiers;
             TypeRenameMappings = typeRenameMappings;
         }
@@ -37,6 +39,7 @@ namespace ServiceImport.Framework
 
         public IDictionary<string, string> NamespaceMappings { get; }
         public Dictionary<XmlQualifiedName, Dictionary<string, NillableOverride>> NillableOverrides { get; }
+        public List<IsRequiredMemberOverride> RequiredMemberOverrides { get; }
 
         public DataContractGenerationOptions DataContractGenerationOptions { get; set; }
 
@@ -54,6 +57,7 @@ namespace ServiceImport.Framework
                     new RemoveExtraDataContractNameExtension(),
                     new TypeAccessModifierExtension(TypeAccessModifiers),
                     new RemoveServiceContractConfigurationNameExtension(),
+                    new IsRequiredMemberOverrideExtension(RequiredMemberOverrides),
                     new ReplaceArrayOfTWithListTExtension()
                 };
 

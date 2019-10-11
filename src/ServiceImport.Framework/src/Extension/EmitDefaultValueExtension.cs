@@ -140,7 +140,7 @@ namespace ServiceImport.Framework.Extension
                     var emitDefaultValue = IsRequired(dataMemberAttribute) &&
                                            !ConsiderDefaultValueForTypeAsNoValue(compileUnit, _xmlTypeMappings, property.Type.BaseType);
 
-                    var emitDefaultValueArgument = dataMemberAttribute.Arguments.SingleOrDefault<CodeAttributeArgument>(p => p.Name == nameof(DataMemberAttribute.EmitDefaultValue));
+                    var emitDefaultValueArgument = dataMemberAttribute.Arguments.FindArgumentByName(nameof(DataMemberAttribute.EmitDefaultValue));
                     if (emitDefaultValueArgument == null)
                     {
                         emitDefaultValueArgument = new CodeAttributeArgument("EmitDefaultValue", new CodePrimitiveExpression(emitDefaultValue));
@@ -156,7 +156,7 @@ namespace ServiceImport.Framework.Extension
 
         private static bool IsRequired(CodeAttributeDeclaration dataMemberAttribute)
         {
-            var isRequiredArgument = dataMemberAttribute.Arguments.SingleOrDefault<CodeAttributeArgument>(p => p.Name == nameof(DataMemberAttribute.IsRequired));
+            var isRequiredArgument = dataMemberAttribute.Arguments.FindArgumentByName(nameof(DataMemberAttribute.IsRequired));
             if (isRequiredArgument == null)
                 return false;
 

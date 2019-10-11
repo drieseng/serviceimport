@@ -11,10 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceImport.MSBuild", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceImport.Framework.Tests", "src\ServiceImport.Framework\test\ServiceImport.Framework.Tests.csproj", "{FAFD8283-F453-40A0-81EA-1617ACA8E262}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NDCC", "NDCC", "{DB4AD9B5-96C6-47B9-A8EB-661BB346AABB}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{428C08D2-2A3E-4122-864A-EA8E5E349D45}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,9 +36,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{428C08D2-2A3E-4122-864A-EA8E5E349D45} = {DB4AD9B5-96C6-47B9-A8EB-661BB346AABB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ACABF685-30A0-4B5F-B662-1B53CCBA3B85}

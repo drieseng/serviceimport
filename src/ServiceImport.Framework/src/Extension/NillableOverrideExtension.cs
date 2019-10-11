@@ -21,12 +21,10 @@ namespace ServiceImport.Framework.Extension
     /// </remarks>
     public class NillableOverrideExtension : IWsdlImportExtension, IContractBehavior, IXsdImportExtension
     {
-        private readonly ServiceModel _serviceModel;
         private readonly Dictionary<XmlQualifiedName, Dictionary<string, NillableOverride>> _nillableOverrides;
 
-        public NillableOverrideExtension(ServiceModel serviceModel, Dictionary<XmlQualifiedName, Dictionary<string, NillableOverride>> nillableOverrides)
+        public NillableOverrideExtension(Dictionary<XmlQualifiedName, Dictionary<string, NillableOverride>> nillableOverrides)
         {
-            _serviceModel = serviceModel;
             _nillableOverrides = nillableOverrides;
         }
 
@@ -116,66 +114,6 @@ namespace ServiceImport.Framework.Extension
                     }
                 }
             }
-
-            /*
-            Console.WriteLine("XML SCHEMA = " + xmlSchemas.Count);
-            Console.WriteLine("GLOBAL TYPES = " + xmlSchemas.GlobalTypes.Count);
-
-            foreach (XmlSchemaComplexType complexType in xmlSchemas.GlobalTypes)
-            {
-                if (!_nillableOverrides.TryGetValue(complexType.QualifiedName, out var overridesForComplexType))
-                {
-                    Console.WriteLine("NO OVERRIDE FOR " + complexType.QualifiedName);
-                    continue;
-                }
-
-                Console.WriteLine("ELEMENT COUNT FOR " + complexType.QualifiedName + " = " + complexType.GetSequenceElements().Count());
-
-                foreach (var element in complexType.GetSequenceElements())
-                {
-                    if (!overridesForComplexType.TryGetValue(element.Name, out var nillableOverride))
-                    {
-                        Console.WriteLine("NO OVERRIDE FOR " + element.Name + " IN " + complexType.QualifiedName);
-                        continue;
-                    }
-
-                    Console.WriteLine("OVERRIDE FOUND FOR " + element.Name + " IN " + complexType.QualifiedName);
-                    Console.WriteLine("IsNillable before = " + element.IsNillable);
-                    Console.WriteLine("MinOccurs before = " + element.MinOccurs);
-
-                    element.IsNillable = nillableOverride.IsNillable;
-                    Console.WriteLine("IsNillable after = " + element.IsNillable);
-                    Console.WriteLine("MinOccurs after = " + element.MinOccurs);
-                }
-            }
-
-            */
-        /*
-            foreach (var complexType in _serviceModel.ComplexTypes)
-            {
-                if (!_nillableOverrides.TryGetValue(complexType.QualifiedName, out var overridesForComplexType))
-                {
-//                    Console.WriteLine("NO OVERRIDE FOR " + complexType.QualifiedName);
-                    continue;
-                }
-
-                foreach (var element in complexType.Elements)
-                {
-                    if (!overridesForComplexType.TryGetValue(element.Name, out var nillableOverride))
-                    {
-//                        Console.WriteLine("NO OVERRIDE FOR " + element.Name + " IN " + complexType.QualifiedName);
-                        continue;
-                    }
-
-                    Console.WriteLine("OVERRIDE FOUND FOR " + element.Name + " IN " + complexType.QualifiedName);
-                    Console.WriteLine("IsNillable before = " + element.IsNillable);
-                    Console.WriteLine("MinOccurs before = " + element.MinOccurs);
-
-                    element.IsNillable = nillableOverride.IsNillable;
-                    Console.WriteLine("IsNillable after = " + element.IsNillable);
-                    Console.WriteLine("MinOccurs after = " + element.MinOccurs);
-                }
-                */
         }
     }
 }

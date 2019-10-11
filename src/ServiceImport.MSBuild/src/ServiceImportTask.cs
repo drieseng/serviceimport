@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Xml;
 using System.Xml.Schema;
 using Microsoft.Build.Framework;
@@ -25,6 +26,14 @@ namespace ServiceImport.MSBuild
         /// complex types.
         /// </summary>
         public ITaskItem[] NillableOverrides
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// Allow fine-grained control over the <see cref="DataMemberAttribute.IsRequired"/> characteristic of members.
+        /// </summary>
+        public ITaskItem[] IsRequiredMemberOverrides
         {
             get; set;
         }
@@ -81,11 +90,13 @@ namespace ServiceImport.MSBuild
             var typeAccessModifierMappings = CreateTypeAccessModifierMappings();
             var typeRenameMappings = CreateTypeRenameMappings();
             var nillableOverrides = CreateNillableOverrides();
+            var requiredMemberOverrides = CreateRequiredMemberOverrides();
             var codeWriter = new FileSystemCodeWriter(codeGeneratorOptions, OutputDirectory);
             var serviceImporter = new ServiceImporter(Wsdls.ToStringArray(),
                                                       xmlTypeMappings,
                                                       namespaceMappings,
                                                       nillableOverrides,
+                                                      requiredMemberOverrides,
                                                       typeAccessModifierMappings,
                                                       typeRenameMappings);
             serviceImporter.DataContractGenerationOptions = new DataContractGenerationOptionsFactory().Create(DataContractGenerationOptions);
@@ -145,6 +156,24 @@ namespace ServiceImport.MSBuild
                     }
 
                     overridesForComplexType.Add(nillableOverride.ElementName, nillableOverride);
+                }
+            }
+
+            return overrides;
+        }
+
+        private List<IsRequiredMemberOverride> CreateRequiredMemberOverrides()
+        {
+            var overrides = new List<IsRequiredMemberOverride>();
+
+            if (IsRequiredMemberOverrides != null)
+            {
+                var factory = new IsRequiredMemberOverrideFactory();
+
+                foreach (var item in IsRequiredMemberOverrides)
+                {
+                    var requiredMemberOverride = factory.Create(item);
+                    overrides.Add(requiredMemberOverride);
                 }
             }
 

@@ -29,7 +29,7 @@ namespace ServiceImport.Framework.Factory
                 wsdlImporter.WsdlImportExtensions.Add(new ComplexTypeOptionalElementsNillableExtension(serviceModel));
             }
 
-            wsdlImporter.WsdlImportExtensions.Add(new NillableOverrideExtension(serviceModel, nillableOverrides));
+            wsdlImporter.WsdlImportExtensions.Add(new NillableOverrideExtension(nillableOverrides));
             wsdlImporter.WsdlImportExtensions.Add(new EmitDefaultValueExtension(serviceModel, xmlTypeMappings));
             wsdlImporter.WsdlImportExtensions.Add(new AbstractTypeExtension(serviceModel));
             wsdlImporter.WsdlImportExtensions.Add(new OperationParameterTypeMappingExtension(xmlTypeMappings));

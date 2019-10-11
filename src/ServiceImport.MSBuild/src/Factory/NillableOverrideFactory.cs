@@ -61,7 +61,6 @@ namespace ServiceImport.MSBuild.Factory
             return flag;
         }
 
-
         private static class MetadataNames
         {
             public const string Element = "Element";
